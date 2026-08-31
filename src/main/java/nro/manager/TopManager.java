@@ -55,11 +55,11 @@ public class TopManager {
                     player.head = (short) (int) rs.getInteger("head", 0);
                     player.gender = (byte) (int) rs.getInteger("gender", 0);
 
-                    dataArray = (JSONArray) JSONValue.parse(rs.getString("data_point"));
+                    dataArray = (JSONArray) JSONValue.parse(rs.getString("data_point") == null ? "[]" : rs.getString("data_point"));
                     player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
                     dataArray.clear();
 
-                    dataArray = (JSONArray) JSONValue.parse(rs.getString("items_body"));
+                    dataArray = (JSONArray) JSONValue.parse(rs.getString("items_body") == null ? "[]" : rs.getString("items_body"));
                     for (int i = 0; i < dataArray.size(); i++) {
                         Item item;
                         dataObject = (JSONObject) JSONValue.parse(dataArray.get(i).toString());
@@ -157,11 +157,11 @@ public class TopManager {
                 } catch (Exception e) {}
                 player.topTask = (byte) nv;
 
-                dataArray = (JSONArray) JSONValue.parse(rs.getString("data_point"));
+                dataArray = (JSONArray) JSONValue.parse(rs.getString("data_point") == null ? "[]" : rs.getString("data_point"));
                 player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
                 dataArray.clear();
 
-                dataArray = (JSONArray) JSONValue.parse(rs.getString("items_body"));
+                dataArray = (JSONArray) JSONValue.parse(rs.getString("items_body") == null ? "[]" : rs.getString("items_body"));
                 for (int i = 0; i < dataArray.size(); i++) {
                     Item item;
                     dataObject = (JSONObject) JSONValue.parse(dataArray.get(i).toString());
@@ -236,11 +236,11 @@ public class TopManager {
                     Object nd = acc.get("NangDong");
                     player.topNangDong = nd != null ? Integer.parseInt(nd.toString()) : 0;
 
-                    dataArray = (JSONArray) JSONValue.parse(rs.getString("data_point"));
+                    dataArray = (JSONArray) JSONValue.parse(rs.getString("data_point") == null ? "[]" : rs.getString("data_point"));
                     player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
                     dataArray.clear();
 
-                    dataArray = (JSONArray) JSONValue.parse(rs.getString("items_body"));
+                    dataArray = (JSONArray) JSONValue.parse(rs.getString("items_body") == null ? "[]" : rs.getString("items_body"));
                     for (int i = 0; i < dataArray.size(); i++) {
                         Item item;
                         dataObject = (JSONObject) JSONValue.parse(dataArray.get(i).toString());
@@ -316,11 +316,11 @@ public class TopManager {
                     Object tongnap = acc.get("tongnap");
                     player.topVnd = tongnap != null ? Integer.parseInt(tongnap.toString()) : 0;
 
-                    dataArray = (JSONArray) JSONValue.parse(rs.getString("data_point"));
+                    dataArray = (JSONArray) JSONValue.parse(rs.getString("data_point") == null ? "[]" : rs.getString("data_point"));
                     player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
                     dataArray.clear();
 
-                    dataArray = (JSONArray) JSONValue.parse(rs.getString("items_body"));
+                    dataArray = (JSONArray) JSONValue.parse(rs.getString("items_body") == null ? "[]" : rs.getString("items_body"));
                     for (int i = 0; i < dataArray.size(); i++) {
                         Item item;
                         dataObject = (JSONObject) JSONValue.parse(dataArray.get(i).toString());
@@ -357,3 +357,4 @@ public class TopManager {
         }
     }
 }
+

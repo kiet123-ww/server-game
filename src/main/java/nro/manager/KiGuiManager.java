@@ -48,7 +48,7 @@ public class KiGuiManager {
                     item.createTime = timeConsign != null ? timeConsign : 0L;
                     item.setConsignName(rs.getString("consignor_name"));
                     item.setSuKien(rs.getBoolean("su_kien", false));
-                    jsonArray = (JSONArray) jsonValue.parse(rs.getString("item_options"));
+                    jsonArray = (JSONArray) JSONValue.parse(rs.getString("item_options") == null ? "[]" : rs.getString("item_options"));
 
                     for (int j = 0; j < jsonArray.size(); j++) {
                         JSONArray opt = (JSONArray) jsonValue.parse(String.valueOf(jsonArray.get(j)));
@@ -105,4 +105,6 @@ public class KiGuiManager {
         }
     }
 }
+
+
 
