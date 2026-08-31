@@ -1,0 +1,120 @@
+package nro.manager;
+
+import lombok.Getter;
+import nro.jdbc.MongoDBConnection;
+import nro.models.item.Item;
+import nro.models.item.ItemOption;
+import nro.models.player.Player;
+import nro.services.ItemService;
+import nro.utils.Log;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import org.bson.Document;
+import com.mongodb.client.model.Sorts;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * @author outcast c-cute hột me 😳
+ */
+public class TopPowerManager {
+
+    @Getter
+    private List<Player> list = new ArrayList<>();
+    private static final TopPowerManager INSTANCE = new TopPowerManager();
+
+    public static TopPowerManager getInstance() {
+        return INSTANCE;
+    }
+
+    public void load() {
+//        Log.success("load BXH Sức Mạnh success");
+        list.clear();
+
+        try {
+            MongoCollection<Document> collection = MongoDBConnection.getDatabase().getCollection("player");
+            try (MongoCursor<Document> cursor = collection.find().sort(Sorts.descending("power")).limit(100).iterator()) {
+                while (cursor.hasNext()) {
+                    Document rs = cursor.next();
+                    Player player = processPlayerDocument(rs);
+                    list.add(player);
+                }
+            }
+        } catch (Exception e) {
+            Log.error(TopPowerManager.class, e);
+        }
+    }
+
+    private Player processPlayerDocument(Document rs) {
+        Player player = new Player();
+
+        player.id = rs.getInteger("id", 0);
+        player.name = rs.getString("name");
+        player.head = rs.getInteger("head", 0).shortValue();
+        player.gender = rs.getInteger("gender", 0).byteValue();
+        
+        Date lastimeloginDate = rs.getDate("lastimelogin");
+        if (lastimeloginDate != null) {
+            player.lastimelogin = new java.sql.Timestamp(lastimeloginDate.getTime());
+        }
+
+        processPlayerDataPoint(rs.getString("data_point"), player);
+        processPlayerItemsBody(rs.getString("items_body"), player);
+
+        return player;
+    }
+
+    private void processPlayerDataPoint(String dataPoint, Player player) {
+        JSONValue jv = new JSONValue();
+        JSONArray dataArray = (JSONArray) jv.parse(dataPoint);
+        player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
+        dataArray.clear();
+    }
+
+    private void processPlayerItemsBody(String itemsBody, Player player) {
+        JSONValue jv = new JSONValue();
+        JSONArray dataArray = (JSONArray) jv.parse(itemsBody);
+
+        for (int i = 0; i < dataArray.size(); i++) {
+            Item item = processItem(dataArray.get(i).toString());
+            player.inventory.itemsBody.add(item);
+        }
+
+        dataArray.clear();
+    }
+
+    private Item processItem(String itemData) {
+        JSONValue jv = new JSONValue();
+        JSONObject dataObject = (JSONObject) jv.parse(itemData);
+        short tempId = Short.parseShort(String.valueOf(dataObject.get("temp_id")));
+        Item item;
+
+        if (tempId != -1) {
+            item = ItemService.gI().createNewItem(tempId, Integer.parseInt(String.valueOf(dataObject.get("quantity"))));
+            JSONArray options = (JSONArray) jv.parse(String.valueOf(dataObject.get("option")).replaceAll("\"", ""));
+
+            for (int j = 0; j < options.size(); j++) {
+                JSONArray opt = (JSONArray) jv.parse(String.valueOf(options.get(j)));
+                item.itemOptions.add(new ItemOption(Integer.parseInt(String.valueOf(opt.get(0))),
+                        Integer.parseInt(String.valueOf(opt.get(1)))));
+            }
+
+            item.createTime = Long.parseLong(String.valueOf(dataObject.get("create_time")));
+
+            if (ItemService.gI().isOutOfDateTime(item)) {
+                item = ItemService.gI().createItemNull();
+            }
+        } else {
+            item = ItemService.gI().createItemNull();
+        }
+
+        return item;
+    }
+}
