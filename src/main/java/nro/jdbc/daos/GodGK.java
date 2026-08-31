@@ -64,21 +64,21 @@ public class GodGK {
                     return false;
                 }
 
-                session.isAdmin = rs.getBoolean("is_admin", false);
-                session.lastTimeLogout = rs.getDate("last_time_logout").getTime();
-                session.actived = rs.getBoolean("active", false);
+                session.isAdmin = (rs.get("is_admin") != null && (rs.get("is_admin").equals(1) || rs.get("is_admin").equals(true)));
+                session.lastTimeLogout = (rs.get("last_time_logout") instanceof java.util.Date ? ((java.util.Date) rs.get("last_time_logout")).getTime() : 0L);
+                session.actived = (rs.get("active") != null && (rs.get("active").equals(1) || rs.get("active").equals(true)));
                 session.goldBar = rs.getInteger("thoi_vang", 0);
                 session.vndBar = rs.getInteger("vnd", 0);
                 session.tongnap = rs.getInteger("tongnap", 0);
                 session.dataReward = rs.getString("reward");
-                if (rs.getDate("last_time_login").getTime() > session.lastTimeLogout) {
+                if ((rs.get("last_time_login") instanceof java.util.Date ? ((java.util.Date) rs.get("last_time_login")).getTime() : 0L) > session.lastTimeLogout) {
                     Service.getInstance().sendThongBaoOK(session, "Tài khoản đang đăng nhập máy chủ khác!");
                     return false;
                 }
-                if (rs.getBoolean("ban", false)) {
+                if ((rs.get("ban") != null && (rs.get("ban").equals(1) || rs.get("ban").equals(true)))) {
                     Service.getInstance().sendThongBaoOK(session, "Tài khoản đã bị khóa do vi phạm điều khoản!");
                 } else {
-                    long lastTimeLogout = rs.getDate("last_time_logout").getTime();
+                    long lastTimeLogout = (rs.get("last_time_logout") instanceof java.util.Date ? ((java.util.Date) rs.get("last_time_logout")).getTime() : 0L);
                     int secondsPass = (int) ((System.currentTimeMillis() - lastTimeLogout) / 1000);
                     if (secondsPass < Manager.SECOND_WAIT_LOGIN && !session.isAdmin) {
                         Service.getInstance().sendThongBaoOK(session, "Vui lòng chờ "
@@ -117,7 +117,7 @@ public class GodGK {
                     player.name = rs.getString("name");
                     player.head = (short) (int) rs.getInteger("head");
                     player.gender = (byte) (int) rs.getInteger("gender");
-                    player.haveTennisSpaceShip = rs.getBoolean("have_tennis_space_ship");
+                    player.haveTennisSpaceShip = (rs.get("have_tennis_space_ship") != null && (rs.get("have_tennis_space_ship").equals(1) || rs.get("have_tennis_space_ship").equals(true)));
 
                     int clanId = rs.getInteger("clan_id_sv" + Manager.SERVER);
                     if (clanId != -1) {
@@ -683,7 +683,7 @@ public class GodGK {
                         PlayerService.gI().sendPetFollow(player);
                     }
 
-                    player.firstTimeLogin = rs.getDate("firstTimeLogin");
+                    player.firstTimeLogin = (rs.get("firstTimeLogin") instanceof java.util.Date ? (java.util.Date) rs.get("firstTimeLogin") : null);
 
                     dataArray = (JSONArray) JSONValue.parse(rs.getString("buy_limit"));
                     for (int i = 0; i < dataArray.size(); i++) {
@@ -825,3 +825,4 @@ public class GodGK {
         return null;
     }
 }
+

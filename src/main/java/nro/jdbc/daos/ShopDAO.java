@@ -78,7 +78,7 @@ public class ShopDAO {
                     itemShop.temp = ItemService.gI().getTemplate((short) (int) rs.getInteger("temp_id", 0));
                     itemShop.gold = rs.getInteger("gold", 0);
                     itemShop.gem = rs.getInteger("gem", 0);
-                    itemShop.isNew = rs.getBoolean("is_new", false);
+                    itemShop.isNew = (rs.get("is_new") != null && (rs.get("is_new").equals(1) || rs.get("is_new").equals(true)));
                     itemShop.itemExchange = rs.getInteger("item_exchange", -1);
                     if (itemShop.itemExchange != -1) {
                         itemShop.iconSpec = ItemService.gI().getTemplate(itemShop.itemExchange).iconID;
@@ -109,3 +109,4 @@ public class ShopDAO {
     }
 
 }
+
