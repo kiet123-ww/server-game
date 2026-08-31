@@ -461,7 +461,7 @@ public class Manager {
                 flagBag.gold = (doc.getInteger("gold") != null ? doc.getInteger("gold") : 0);
                 flagBag.gem = (doc.getInteger("gem") != null ? doc.getInteger("gem") : 0);
                 flagBag.iconId = (doc.getInteger("icon_id") != null ? (short) (int) doc.getInteger("icon_id") : 0);
-                String[] iconData = doc.getString("icon_data").split(",");
+                String[] iconData = doc.get("icon_data").toString().split(",");
                 flagBag.iconEffect = new short[iconData.length];
                 for (int j = 0; j < iconData.length; j++) {
                     flagBag.iconEffect[j] = Short.parseShort(iconData[j].trim());
@@ -581,7 +581,7 @@ public class Manager {
                 itemTemp.description = doc.getString("description");
                 itemTemp.iconID = (doc.getInteger("icon_id") != null ? (short) (int) doc.getInteger("icon_id") : 0);
                 itemTemp.part = (doc.getInteger("part") != null ? (short) (int) doc.getInteger("part") : 0);
-                itemTemp.isUpToUp = (doc.getBoolean("is_up_to_up") != null ? doc.getBoolean("is_up_to_up") : false);
+                itemTemp.isUpToUp = (doc.getInteger("is_up_to_up") != null && doc.getInteger("is_up_to_up") == 1);
                 itemTemp.strRequire = (doc.getInteger("power_require") != null ? doc.getInteger("power_require") : 0);
                 ITEM_TEMPLATES.add(itemTemp);
             }
