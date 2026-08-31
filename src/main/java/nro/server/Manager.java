@@ -577,8 +577,8 @@ public class Manager {
                 itemTemp.id = (doc.getInteger("id") != null ? (short) (int) doc.getInteger("id") : 0);
                 itemTemp.type = (doc.getInteger("type") != null ? (byte) (int) doc.getInteger("type") : 0);
                 itemTemp.gender = (doc.getInteger("gender") != null ? (byte) (int) doc.getInteger("gender") : 0);
-                itemTemp.name = doc.getString("name");
-                itemTemp.description = doc.getString("description");
+                itemTemp.name = doc.get("name") != null ? doc.get("name").toString() : "";
+                itemTemp.description = doc.get("description") != null ? doc.get("description").toString() : "";
                 itemTemp.iconID = (doc.getInteger("icon_id") != null ? (short) (int) doc.getInteger("icon_id") : 0);
                 itemTemp.part = (doc.getInteger("part") != null ? (short) (int) doc.getInteger("part") : 0);
                 itemTemp.isUpToUp = (doc.getInteger("is_up_to_up") != null && doc.getInteger("is_up_to_up") == 1);

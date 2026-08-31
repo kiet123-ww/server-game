@@ -195,38 +195,59 @@ public class Resources {
     }
 
     public void sendSmallVersion(Session session) {
+        System.out.println("[RESOURCE] sendSmallVersion - typeClient=" + session.typeClient + " zoomLevel=" + session.zoomLevel);
         try {
             AbsResources res = find(session.typeClient);
-            if (res != null) {
-                byte[][] smallVersion = res.getSmallVersion();
-                byte[] data = smallVersion[session.zoomLevel - 1];
-                Message ms = new Message(Cmd.SMALLIMAGE_VERSION);
-                ms.writer().writeShort(data.length);
-                ms.writer().write(data);
-                session.sendMessage(ms);
-                ms.cleanup();
+            if (res == null) {
+                System.out.println("[RESOURCE] sendSmallVersion FAIL - res null, typeClient=" + session.typeClient);
+                return;
             }
-        } catch (IOException e) {
+            byte[][] smallVersion = res.getSmallVersion();
+            if (smallVersion == null) {
+                System.out.println("[RESOURCE] sendSmallVersion FAIL - smallVersion null, resources/normal/image chua duoc init?");
+                return;
+            }
+            byte[] data = smallVersion[session.zoomLevel - 1];
+            System.out.println("[RESOURCE] sendSmallVersion - data.length=" + (data != null ? data.length : "NULL"));
+            Message ms = new Message(Cmd.SMALLIMAGE_VERSION);
+            ms.writer().writeShort(data.length);
+            ms.writer().write(data);
+            session.sendMessage(ms);
+            ms.cleanup();
+            System.out.println("[RESOURCE] sendSmallVersion OK");
+        } catch (Exception e) {
+            System.out.println("[RESOURCE] sendSmallVersion EXCEPTION: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     public void sendBGVersion(Session session) {
+        System.out.println("[RESOURCE] sendBGVersion - typeClient=" + session.typeClient + " zoomLevel=" + session.zoomLevel);
         try {
             AbsResources res = find(session.typeClient);
-            if (res != null) {
-                byte[][] backgroundVersion = res.getBackgroundVersion();
-                byte[] data = backgroundVersion[session.zoomLevel - 1];
-                Message ms = new Message(Cmd.BGITEM_VERSION);
-                ms.writer().writeShort(data.length);
-                ms.writer().write(data);
-                session.sendMessage(ms);
-                ms.cleanup();
+            if (res == null) {
+                System.out.println("[RESOURCE] sendBGVersion FAIL - res null");
+                return;
             }
-        } catch (IOException e) {
+            byte[][] backgroundVersion = res.getBackgroundVersion();
+            if (backgroundVersion == null) {
+                System.out.println("[RESOURCE] sendBGVersion FAIL - backgroundVersion null, resources/normal/image chua duoc init?");
+                return;
+            }
+            byte[] data = backgroundVersion[session.zoomLevel - 1];
+            System.out.println("[RESOURCE] sendBGVersion - data.length=" + (data != null ? data.length : "NULL"));
+            Message ms = new Message(Cmd.BGITEM_VERSION);
+            ms.writer().writeShort(data.length);
+            ms.writer().write(data);
+            session.sendMessage(ms);
+            ms.cleanup();
+            System.out.println("[RESOURCE] sendBGVersion OK");
+        } catch (Exception e) {
+            System.out.println("[RESOURCE] sendBGVersion EXCEPTION: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
 
     // public void downloadIBN(Session session, String filename) {
     // try {
