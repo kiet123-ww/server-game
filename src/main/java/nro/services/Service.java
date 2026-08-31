@@ -565,7 +565,7 @@ public class Service {
             }
             if (text.equals("ls")) {
                 try {
-                    Manager.SHOPS = ShopDAO.getShops(null);
+                    Manager.SHOPS = ShopDAO.getShops();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

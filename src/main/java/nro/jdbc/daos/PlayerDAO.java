@@ -36,7 +36,7 @@ public class PlayerDAO {
 
     public static boolean updateTimeLogout;
 
-    public static void createNewPlayer(Connection con, int userId, String name, byte gender, int hair) {
+    public static void createNewPlayer(int userId, String name, byte gender, int hair) {
         
         try {
             JSONArray dataInventory = new JSONArray();
@@ -908,7 +908,7 @@ public class PlayerDAO {
                                 com.mongodb.client.model.Updates.set("1sao", n1s),
                                 com.mongodb.client.model.Updates.set("2sao", n2s),
                                 com.mongodb.client.model.Updates.set("3sao", n3s),
-                                com.mongodb.client.model.Updates.set("collection_book", gson.toJson(player.getCollectionBook().getCards())),
+                                com.mongodb.client.model.Updates.set("collection_book", new Gson().toJson(player.getCollectionBook().getCards())),
                                 com.mongodb.client.model.Updates.set("event_point", player.event.getEventPoint()),
                                 com.mongodb.client.model.Updates.set("firstTimeLogin", Util.toDateString(player.firstTimeLogin)),
                                 com.mongodb.client.model.Updates.set("challenge", challenge),

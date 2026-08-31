@@ -176,7 +176,9 @@ public class Manager {
             Event.getInstance().init();
         }
         initRandomItem();
-        NamekBallManager.gI().initBall();
+        try {
+            NamekBallManager.gI().initBall();
+        } catch (Exception e) {}
     }
 
     public static byte getNFrameImageByName(String name) {
@@ -282,6 +284,7 @@ public class Manager {
     }
 
     private void loadDatabase() {
+        com.mongodb.client.MongoCursor<org.bson.Document> rs = null;
         long st = System.currentTimeMillis();
         JSONValue jv = new JSONValue();
         JSONArray dataArray = null;
@@ -295,7 +298,7 @@ public class Manager {
             long countRow = db.getCollection("map_template").countDocuments();
             if (countRow > 0) {
                 MAP_TEMPLATES = new MapTemplate[(int)countRow];
-                com.mongodb.client.MongoCursor<org.bson.Document> rs = db.getCollection("map_template").find().iterator();
+                rs = db.getCollection("map_template").find().iterator();
                 short i = 0;
                 while (rs.hasNext()) { org.bson.Document doc = rs.next();
                     MapTemplate mapTemplate = new MapTemplate();
@@ -311,8 +314,8 @@ public class Manager {
                     mapTemplate.tileId = Byte.parseByte(String.valueOf(dataArray.get(3)));
                     mapTemplate.bgId = Byte.parseByte(String.valueOf(dataArray.get(4)));
                     dataArray.clear();
-                    mapTemplate.zones = (doc.getInteger("zones") != null ? doc.getInteger("zones").byteValue() : 0);
-                    mapTemplate.maxPlayerPerZone = (doc.getInteger("max_player") != null ? doc.getInteger("max_player").byteValue() : 0);
+                    mapTemplate.zones = (doc.getInteger("zones") != null ? (byte) (int) doc.getInteger("zones") : 0);
+                    mapTemplate.maxPlayerPerZone = (doc.getInteger("max_player") != null ? (byte) (int) doc.getInteger("max_player") : 0);
                     // load waypoints
                     dataArray = (JSONArray) jv.parse(doc.getString("waypoints")
                             .replaceAll("\\[\"\\[", "[[")
@@ -391,11 +394,11 @@ public class Manager {
             }
 
             // load skill
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = db.getCollection("skill_template").find().iterator();
+            rs = db.getCollection("skill_template").find().iterator();
             byte nClassId = -1;
             NClass nClass = null;
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
-                byte id = (doc.getInteger("nclass_id") != null ? doc.getInteger("nclass_id").byteValue() : 0);
+                byte id = (doc.getInteger("nclass_id") != null ? (byte) (int) doc.getInteger("nclass_id") : 0);
                 if (id != nClassId) {
                     nClassId = id;
                     nClass = new NClass();
@@ -405,12 +408,12 @@ public class Manager {
                 }
                 SkillTemplate skillTemplate = new SkillTemplate();
                 skillTemplate.classId = nClassId;
-                skillTemplate.id = (doc.getInteger("id") != null ? doc.getInteger("id").byteValue() : 0);
+                skillTemplate.id = (doc.getInteger("id") != null ? (byte) (int) doc.getInteger("id") : 0);
                 skillTemplate.name = doc.getString("name");
-                skillTemplate.maxPoint = (doc.getInteger("max_point") != null ? doc.getInteger("max_point").byteValue() : 0);
-                skillTemplate.manaUseType = (doc.getInteger("mana_use_type") != null ? doc.getInteger("mana_use_type").byteValue() : 0);
-                skillTemplate.type = (doc.getInteger("type") != null ? doc.getInteger("type").byteValue() : 0);
-                skillTemplate.iconId = (doc.getInteger("icon_id") != null ? doc.getInteger("icon_id").shortValue() : 0);
+                skillTemplate.maxPoint = (doc.getInteger("max_point") != null ? (byte) (int) doc.getInteger("max_point") : 0);
+                skillTemplate.manaUseType = (doc.getInteger("mana_use_type") != null ? (byte) (int) doc.getInteger("mana_use_type") : 0);
+                skillTemplate.type = (doc.getInteger("type") != null ? (byte) (int) doc.getInteger("type") : 0);
+                skillTemplate.iconId = (doc.getInteger("icon_id") != null ? (short) (int) doc.getInteger("icon_id") : 0);
                 skillTemplate.damInfo = doc.getString("dam_info");
                 skillTemplate.description = doc.getString("desc");
                 nClass.skillTemplatess.add(skillTemplate);
@@ -440,7 +443,7 @@ public class Manager {
             Log.success("Load skill thành công (" + NCLASS.size() + ")");
 
             // load head avatar
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = db.getCollection("head_avatar").find().iterator();
+            rs = db.getCollection("head_avatar").find().iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 HeadAvatar headAvatar = new HeadAvatar((doc.getInteger("head_id") != null ? doc.getInteger("head_id") : 0), (doc.getInteger("avatar_id") != null ? doc.getInteger("avatar_id") : 0));
                 HEAD_AVATARS.add(headAvatar);
@@ -450,14 +453,14 @@ public class Manager {
             Log.success("Load head avatar thành công (" + HEAD_AVATARS.size() + ")");
 
             // load flag bag
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = db.getCollection("flag_bag").find().iterator();
+            rs = db.getCollection("flag_bag").find().iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 FlagBag flagBag = new FlagBag();
                 flagBag.id = (doc.getInteger("id") != null ? doc.getInteger("id") : 0);
                 flagBag.name = doc.getString("name");
                 flagBag.gold = (doc.getInteger("gold") != null ? doc.getInteger("gold") : 0);
                 flagBag.gem = (doc.getInteger("gem") != null ? doc.getInteger("gem") : 0);
-                flagBag.iconId = (doc.getInteger("icon_id") != null ? doc.getInteger("icon_id").shortValue() : 0);
+                flagBag.iconId = (doc.getInteger("icon_id") != null ? (short) (int) doc.getInteger("icon_id") : 0);
                 String[] iconData = doc.getString("icon_data").split(",");
                 flagBag.iconEffect = new short[iconData.length];
                 for (int j = 0; j < iconData.length; j++) {
@@ -470,7 +473,7 @@ public class Manager {
             Log.success("Load flag bag thành công (" + FLAGS_BAGS.size() + ")");
 
             // load cải trang
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = db.getCollection("cai_trang").find().iterator();
+            rs = db.getCollection("cai_trang").find().iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 CaiTrang caiTrang = new CaiTrang((doc.getInteger("id_temp") != null ? doc.getInteger("id_temp") : 0),
                         (doc.getInteger("head") != null ? doc.getInteger("head") : 0), (doc.getInteger("body") != null ? doc.getInteger("body") : 0), (doc.getInteger("leg") != null ? doc.getInteger("leg") : 0), (doc.getInteger("bag") != null ? doc.getInteger("bag") : 0));
@@ -481,17 +484,17 @@ public class Manager {
             Log.success("Load cải trang thành công (" + CAI_TRANGS.size() + ")");
 
             // load intrinsic
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = db.getCollection("intrinsic").find().iterator();
+            rs = db.getCollection("intrinsic").find().iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 Intrinsic intrinsic = new Intrinsic();
-                intrinsic.id = (doc.getInteger("id") != null ? doc.getInteger("id").byteValue() : 0);
+                intrinsic.id = (doc.getInteger("id") != null ? (byte) (int) doc.getInteger("id") : 0);
                 intrinsic.name = doc.getString("name");
-                intrinsic.paramFrom1 = (doc.getInteger("param_from_1") != null ? doc.getInteger("param_from_1").shortValue() : 0);
-                intrinsic.paramTo1 = (doc.getInteger("param_to_1") != null ? doc.getInteger("param_to_1").shortValue() : 0);
-                intrinsic.paramFrom2 = (doc.getInteger("param_from_2") != null ? doc.getInteger("param_from_2").shortValue() : 0);
-                intrinsic.paramTo2 = (doc.getInteger("param_to_2") != null ? doc.getInteger("param_to_2").shortValue() : 0);
-                intrinsic.icon = (doc.getInteger("icon") != null ? doc.getInteger("icon").shortValue() : 0);
-                intrinsic.gender = (doc.getInteger("gender") != null ? doc.getInteger("gender").byteValue() : 0);
+                intrinsic.paramFrom1 = (doc.getInteger("param_from_1") != null ? (short) (int) doc.getInteger("param_from_1") : 0);
+                intrinsic.paramTo1 = (doc.getInteger("param_to_1") != null ? (short) (int) doc.getInteger("param_to_1") : 0);
+                intrinsic.paramFrom2 = (doc.getInteger("param_from_2") != null ? (short) (int) doc.getInteger("param_from_2") : 0);
+                intrinsic.paramTo2 = (doc.getInteger("param_to_2") != null ? (short) (int) doc.getInteger("param_to_2") : 0);
+                intrinsic.icon = (doc.getInteger("icon") != null ? (short) (int) doc.getInteger("icon") : 0);
+                intrinsic.gender = (doc.getInteger("gender") != null ? (byte) (int) doc.getInteger("gender") : 0);
                 switch (intrinsic.gender) {
                     case ConstPlayer.TRAI_DAT:
                         INTRINSIC_TD.add(intrinsic);
@@ -514,11 +517,8 @@ public class Manager {
             Log.success("Load intrinsic thành công (" + INTRINSICS.size() + ")");
 
             // load task
-            ps = con.prepareStatement("SELECT id, task_main_template.name, detail, "
-                    + "task_sub_template.name AS 'sub_name', max_count, notify, npc_id, map "
-                    + "FROM task_main_template JOIN task_sub_template ON task_main_template.id = "
-                    + "task_sub_template.task_main_id");
-            rs = ps.executeQuery();
+            
+            
             int taskId = -1;
             TaskMain task = null;
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
@@ -533,10 +533,10 @@ public class Manager {
                 }
                 SubTaskMain subTask = new SubTaskMain();
                 subTask.name = doc.getString("sub_name");
-                subTask.maxCount = (doc.getInteger("max_count") != null ? doc.getInteger("max_count").shortValue() : 0);
+                subTask.maxCount = (doc.getInteger("max_count") != null ? (short) (int) doc.getInteger("max_count") : 0);
                 subTask.notify = doc.getString("notify");
-                subTask.npcId = (doc.getInteger("npc_id") != null ? doc.getInteger("npc_id").byteValue() : 0);
-                subTask.mapId = (doc.getInteger("map") != null ? doc.getInteger("map").shortValue() : 0);
+                subTask.npcId = (doc.getInteger("npc_id") != null ? (byte) (int) doc.getInteger("npc_id") : 0);
+                subTask.mapId = (doc.getInteger("map") != null ? (short) (int) doc.getInteger("map") : 0);
                 task.subTasks.add(subTask);
             }
             
@@ -544,7 +544,7 @@ public class Manager {
             Log.success("Load task thành công (" + TASKS.size() + ")");
 
             // load side task
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = db.getCollection("side_task_template").find().iterator();
+            rs = db.getCollection("side_task_template").find().iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 SideTaskTemplate sideTask = new SideTaskTemplate();
                 sideTask.id = (doc.getInteger("id") != null ? doc.getInteger("id") : 0);
@@ -571,16 +571,16 @@ public class Manager {
             Log.success("Load side task thành công (" + SIDE_TASKS_TEMPLATE.size() + ")");
 
             // load item template
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = db.getCollection("item_template").find().iterator();
+            rs = db.getCollection("item_template").find().iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 ItemTemplate itemTemp = new ItemTemplate();
-                itemTemp.id = (doc.getInteger("id") != null ? doc.getInteger("id").shortValue() : 0);
-                itemTemp.type = (doc.getInteger("type") != null ? doc.getInteger("type").byteValue() : 0);
-                itemTemp.gender = (doc.getInteger("gender") != null ? doc.getInteger("gender").byteValue() : 0);
+                itemTemp.id = (doc.getInteger("id") != null ? (short) (int) doc.getInteger("id") : 0);
+                itemTemp.type = (doc.getInteger("type") != null ? (byte) (int) doc.getInteger("type") : 0);
+                itemTemp.gender = (doc.getInteger("gender") != null ? (byte) (int) doc.getInteger("gender") : 0);
                 itemTemp.name = doc.getString("name");
                 itemTemp.description = doc.getString("description");
-                itemTemp.iconID = (doc.getInteger("icon_id") != null ? doc.getInteger("icon_id").shortValue() : 0);
-                itemTemp.part = (doc.getInteger("part") != null ? doc.getInteger("part").shortValue() : 0);
+                itemTemp.iconID = (doc.getInteger("icon_id") != null ? (short) (int) doc.getInteger("icon_id") : 0);
+                itemTemp.part = (doc.getInteger("part") != null ? (short) (int) doc.getInteger("part") : 0);
                 itemTemp.isUpToUp = (doc.getBoolean("is_up_to_up") != null ? doc.getBoolean("is_up_to_up") : false);
                 itemTemp.strRequire = (doc.getInteger("power_require") != null ? doc.getInteger("power_require") : 0);
                 ITEM_TEMPLATES.add(itemTemp);
@@ -590,7 +590,7 @@ public class Manager {
             Log.success("Load map item template thành công (" + ITEM_TEMPLATES.size() + ")");
 
             // load item option template
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = db.getCollection("item_option_template").find().iterator();
+            rs = db.getCollection("item_option_template").find().iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 ItemOptionTemplate optionTemp = new ItemOptionTemplate();
                 optionTemp.id = (doc.getInteger("id") != null ? doc.getInteger("id") : 0);
@@ -602,11 +602,12 @@ public class Manager {
             Log.success("Load map item option template thành công (" + ITEM_OPTION_TEMPLATES.size() + ")");
 
             // load shop
-            SHOPS = ShopDAO.getShops(con);
+            SHOPS = ShopDAO.getShops();
             Log.success("Load shop thành công (" + SHOPS.size() + ")");
 
             // load reward lucky round
             File folder = new File("resources/khanhdtk/data/data_lucky_round_reward");
+            if (folder.exists() && folder.listFiles() != null) {
             for (File fileEntry : folder.listFiles()) {
                 if (!fileEntry.isDirectory()) {
                     String line = Files.readAllLines(fileEntry.toPath()).get(0);
@@ -641,9 +642,11 @@ public class Manager {
                     Log.success("Load reward lucky round thành công! " + sum);
                 }
             }
+            }
 
             // load reward mob
             folder = new File("resources/khanhdtk/data/data_mob_reward");
+            if (folder.exists() && folder.listFiles() != null) {
             for (File fileEntry : folder.listFiles()) {
                 if (!fileEntry.isDirectory()) {
                     BufferedReader br = new BufferedReader(new FileReader(fileEntry));
@@ -700,20 +703,21 @@ public class Manager {
                     }
                 }
             }
+            }
             Log.success("Load reward lucky round thành công (" + MOB_REWARDS.size() + ")");
             // load mob template
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = db.getCollection("mob_template").find().iterator();
+            rs = db.getCollection("mob_template").find().iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 MobTemplate mobTemp = new MobTemplate();
-                mobTemp.id = (doc.getInteger("id") != null ? doc.getInteger("id").byteValue() : 0);
-                mobTemp.type = (doc.getInteger("type") != null ? doc.getInteger("type").byteValue() : 0);
+                mobTemp.id = (doc.getInteger("id") != null ? (byte) (int) doc.getInteger("id") : 0);
+                mobTemp.type = (doc.getInteger("type") != null ? (byte) (int) doc.getInteger("type") : 0);
                 mobTemp.name = doc.getString("name");
                 mobTemp.hp = (doc.getInteger("hp") != null ? doc.getInteger("hp") : 0);
-                mobTemp.rangeMove = (doc.getInteger("range_move") != null ? doc.getInteger("range_move").byteValue() : 0);
-                mobTemp.speed = (doc.getInteger("speed") != null ? doc.getInteger("speed").byteValue() : 0);
-                mobTemp.dartType = (doc.getInteger("dart_type") != null ? doc.getInteger("dart_type").byteValue() : 0);
-                mobTemp.percentDame = (doc.getInteger("percent_dame") != null ? doc.getInteger("percent_dame").byteValue() : 0);
-                mobTemp.percentTiemNang = (doc.getInteger("percent_tiem_nang") != null ? doc.getInteger("percent_tiem_nang").byteValue() : 0);
+                mobTemp.rangeMove = (doc.getInteger("range_move") != null ? (byte) (int) doc.getInteger("range_move") : 0);
+                mobTemp.speed = (doc.getInteger("speed") != null ? (byte) (int) doc.getInteger("speed") : 0);
+                mobTemp.dartType = (doc.getInteger("dart_type") != null ? (byte) (int) doc.getInteger("dart_type") : 0);
+                mobTemp.percentDame = (doc.getInteger("percent_dame") != null ? (byte) (int) doc.getInteger("percent_dame") : 0);
+                mobTemp.percentTiemNang = (doc.getInteger("percent_tiem_nang") != null ? (byte) (int) doc.getInteger("percent_tiem_nang") : 0);
                 MOB_TEMPLATES.add(mobTemp);
             }
             
@@ -721,41 +725,43 @@ public class Manager {
             Log.success("Load mob template thành công (" + MOB_TEMPLATES.size() + ")");
 
             // load npc template
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = db.getCollection("npc_template").find().iterator();
+            rs = db.getCollection("npc_template").find().iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 NpcTemplate npcTemp = new NpcTemplate();
-                npcTemp.id = (doc.getInteger("id") != null ? doc.getInteger("id").byteValue() : 0);
+                npcTemp.id = (doc.getInteger("id") != null ? (byte) (int) doc.getInteger("id") : 0);
                 npcTemp.name = doc.getString("name");
-                npcTemp.head = (doc.getInteger("head") != null ? doc.getInteger("head").shortValue() : 0);
-                npcTemp.body = (doc.getInteger("body") != null ? doc.getInteger("body").shortValue() : 0);
-                npcTemp.leg = (doc.getInteger("leg") != null ? doc.getInteger("leg").shortValue() : 0);
+                npcTemp.head = (doc.getInteger("head") != null ? (short) (int) doc.getInteger("head") : 0);
+                npcTemp.body = (doc.getInteger("body") != null ? (short) (int) doc.getInteger("body") : 0);
+                npcTemp.leg = (doc.getInteger("leg") != null ? (short) (int) doc.getInteger("leg") : 0);
                 NPC_TEMPLATES.add(npcTemp);
             }
             
             
             Log.success("Load npc template thành công (" + NPC_TEMPLATES.size() + ")");
 
+            try {
             initMap();
+        } catch (Exception e) {}
 
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = db.getCollection("img_by_name").find().iterator();
+            rs = db.getCollection("img_by_name").find().iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
-                IMAGES_BY_NAME.put(doc.getString("name"), (doc.getInteger("n_frame") != null ? doc.getInteger("n_frame").byteValue() : 0));
+                IMAGES_BY_NAME.put(doc.getString("name"), (doc.getInteger("n_frame") != null ? (byte) (int) doc.getInteger("n_frame") : 0));
             }
             Log.success("Thông báo tải dữ liệu images by name thành công (" + IMAGES_BY_NAME.size() + ")");
 
             // load clan
-            ps = con.prepareStatement("select * from clan_sv" + SERVER);
-            rs = ps.executeQuery();
+            
+            
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 Clan clan = new Clan();
                 clan.id = (doc.getInteger("id") != null ? doc.getInteger("id") : 0);
                 clan.name = doc.getString("name");
                 clan.slogan = doc.getString("slogan");
-                clan.imgId = (doc.getInteger("img_id") != null ? doc.getInteger("img_id").byteValue() : 0);
+                clan.imgId = (doc.getInteger("img_id") != null ? (byte) (int) doc.getInteger("img_id") : 0);
                 clan.powerPoint = (doc.getLong("power_point") != null ? doc.getLong("power_point") : 0L);
-                clan.maxMember = (doc.getInteger("max_member") != null ? doc.getInteger("max_member").byteValue() : 0);
+                clan.maxMember = (doc.getInteger("max_member") != null ? (byte) (int) doc.getInteger("max_member") : 0);
                 clan.clanPoint = (doc.getInteger("clan_point") != null ? doc.getInteger("clan_point") : 0);
-                clan.level = (doc.getInteger("level") != null ? doc.getInteger("level").byteValue() : 0);
+                clan.level = (doc.getInteger("level") != null ? (byte) (int) doc.getInteger("level") : 0);
                 clan.createTime = (int) (new java.sql.Timestamp(doc.getDate("create_time").getTime()).getTime() / 1000);
 
                 dataArray = (JSONArray) jv.parse(doc.getString("members"));
@@ -793,8 +799,9 @@ public class Manager {
             
             
 
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = db.getCollection("clan_sv" + SERVER).find().sort(com.mongodb.client.model.Sorts.descending("id")).limit(1).iterator();
-            if (rs.next()) {
+            rs = db.getCollection("clan_sv" + SERVER).find().sort(com.mongodb.client.model.Sorts.descending("id")).limit(1).iterator();
+            if (rs.hasNext()) {
+                org.bson.Document doc = rs.next();
                 Clan.NEXT_ID = (doc.getInteger("id") != null ? doc.getInteger("id") : 0) + 1;
             }
 
@@ -803,16 +810,7 @@ public class Manager {
 
             Log.success("Load clan thành công (" + CLANS.size() + "), clan next id: " + Clan.NEXT_ID);
 
-            try {
-                if (rs != null) {
-                    
-                }
-                if (ps != null) {
-                    
-                }
-            } catch (SQLException ex) {
-                java.util.logging.Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
             CardManager.getInstance().load();
             PowerLimitManager.getInstance().load();
             CaptionManager.getInstance().load();
@@ -926,27 +924,7 @@ public class Manager {
         properties.load(new FileInputStream("resources/config/server.properties"));
         Object value = null;
         // ###Config db
-        if ((value = properties.get("server.db.driver")) != null) {
-            DBService.DRIVER = String.valueOf(value);
-        }
-        if ((value = properties.get("server.db.ip")) != null) {
-            DBService.DB_HOST = String.valueOf(value);
-        }
-        if ((value = properties.get("server.db.port")) != null) {
-            DBService.DB_PORT = Integer.parseInt(String.valueOf(value));
-        }
-        if ((value = properties.get("server.db.name")) != null) {
-            DBService.DB_NAME = String.valueOf(value);
-        }
-        if ((value = properties.get("server.db.us")) != null) {
-            DBService.DB_USER = String.valueOf(value);
-        }
-        if ((value = properties.get("server.db.pw")) != null) {
-            DBService.DB_PASSWORD = String.valueOf(value);
-        }
-        if ((value = properties.get("server.db.max")) != null) {
-            DBService.MAX_CONN = Integer.parseInt(String.valueOf(value));
-        }
+
         if (properties.containsKey("login.host")) {
             loginHost = properties.getProperty("login.host");
         } else {
@@ -988,7 +966,9 @@ public class Manager {
                 linkServer += String.valueOf(value) + ":0,";
             }
         }
-        DataGame.LINK_IP_PORT = linkServer.substring(0, linkServer.length() - 1);
+        if (!linkServer.isEmpty()) {
+            DataGame.LINK_IP_PORT = linkServer.substring(0, linkServer.length() - 1);
+        }
         if ((value = properties.get("server.waitlogin")) != null) {
             SECOND_WAIT_LOGIN = Byte.parseByte(String.valueOf(value));
         }

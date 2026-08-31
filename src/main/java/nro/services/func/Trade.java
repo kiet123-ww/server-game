@@ -359,8 +359,8 @@ public class Trade {
                             bag1Before, bag2Before, this.player1.inventory.itemsBag, this.player2.inventory.itemsBag,
                             gold1Before, gold2Before, this.player1.inventory.gold, this.player2.inventory.gold);
                     try {
-                        PlayerDAO.saveBag(null, player1);
-                        PlayerDAO.saveBag(null, player2);
+                        PlayerDAO.saveBag(player1);
+                        PlayerDAO.saveBag(player2);
                     } catch (Exception e) {
                     }
                 }

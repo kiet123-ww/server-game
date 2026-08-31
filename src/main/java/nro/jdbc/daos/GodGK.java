@@ -115,8 +115,8 @@ public class GodGK {
                     // base info
                     player.id = rs.getInteger("id");
                     player.name = rs.getString("name");
-                    player.head = rs.getInteger("head").shortValue();
-                    player.gender = rs.getInteger("gender").byteValue();
+                    player.head = (short) (int) rs.getInteger("head");
+                    player.gender = (byte) (int) rs.getInteger("gender");
                     player.haveTennisSpaceShip = rs.getBoolean("have_tennis_space_ship");
 
                     int clanId = rs.getInteger("clan_id_sv" + Manager.SERVER);

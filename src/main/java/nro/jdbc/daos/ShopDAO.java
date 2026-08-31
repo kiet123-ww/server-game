@@ -34,8 +34,8 @@ public class ShopDAO {
                     Document rs = cursor.next();
                     Shop shop = new Shop();
                     shop.id = rs.getInteger("id", 0);
-                    shop.npcId = rs.getInteger("npc_id", 0).byteValue();
-                    shop.shopOrder = rs.getInteger("shop_order", 0).byteValue();
+                    shop.npcId = (byte) (int) rs.getInteger("npc_id", 0);
+                    shop.shopOrder = (byte) (int) rs.getInteger("shop_order", 0);
                     loadShopTab(shop);
                     list.add(shop);
                 }
@@ -75,7 +75,7 @@ public class ShopDAO {
                     ItemShop itemShop = new ItemShop();
                     itemShop.tabShop = tabShop;
                     itemShop.id = rs.getInteger("id", 0);
-                    itemShop.temp = ItemService.gI().getTemplate(rs.getInteger("temp_id", 0).shortValue());
+                    itemShop.temp = ItemService.gI().getTemplate((short) (int) rs.getInteger("temp_id", 0));
                     itemShop.gold = rs.getInteger("gold", 0);
                     itemShop.gem = rs.getInteger("gem", 0);
                     itemShop.isNew = rs.getBoolean("is_new", false);

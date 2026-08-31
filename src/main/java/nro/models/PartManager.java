@@ -43,8 +43,8 @@ public class PartManager {
             try (com.mongodb.client.MongoCursor<org.bson.Document> cursor = collection.find().iterator()) {
                 while (cursor.hasNext()) {
                     org.bson.Document doc = cursor.next();
-                    short id = doc.getInteger("id").shortValue();
-                    byte type = doc.getInteger("TYPE").byteValue();
+                    short id = (short) (int) doc.getInteger("id");
+                    byte type = (byte) (int) doc.getInteger("TYPE");
                     String partJson = doc.getString("DATA");
                     int[][] partData = gson.fromJson(partJson, int[][].class);
                     Part part = new Part();

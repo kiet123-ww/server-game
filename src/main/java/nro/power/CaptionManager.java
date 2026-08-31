@@ -37,7 +37,7 @@ public class CaptionManager {
             com.mongodb.client.MongoCursor<org.bson.Document> rs = collection.find().iterator();
             while (rs.hasNext()) {
                 org.bson.Document doc = rs.next();
-                int id = (doc.getInteger("id") != null ? doc.getInteger("id").shortValue() : 0);
+                int id = (doc.getInteger("id") != null ? (short) (int) doc.getInteger("id") : 0);
                 String earth = doc.getString("earth");
                 String saiya = doc.getString("saiya");
                 String namek = doc.getString("namek");

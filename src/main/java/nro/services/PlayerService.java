@@ -252,8 +252,8 @@ public class PlayerService {
         }
     }
 
-    public boolean createPlayer(Connection con, int userId, String name, int gender, int hair) {
-        PlayerDAO.createNewPlayer(con, userId, name, (byte) gender, hair);
+    public boolean createPlayer(int userId, String name, int gender, int hair) {
+        PlayerDAO.createNewPlayer(userId, name, (byte) gender, hair);
         return true;
     }
 

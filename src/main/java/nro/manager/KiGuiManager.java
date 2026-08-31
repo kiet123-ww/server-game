@@ -34,12 +34,12 @@ public class KiGuiManager {
             try (MongoCursor<Document> cursor = collection.find().iterator()) {
                 while (cursor.hasNext()) {
                     Document rs = cursor.next();
-                    short itemID = rs.getInteger("item_id", 0).shortValue();
+                    short itemID = (short) (int) rs.getInteger("item_id", 0);
                     int quantity = rs.getInteger("quantity", 0);
                     KiGuiItem item = ItemService.gI().createNewConsignmentItem(itemID, quantity);
                     Long consignorId = rs.getLong("consignor_id");
                     item.setConsignorID(consignorId != null ? consignorId : 0L);
-                    item.setTab(rs.getInteger("tab", 0).byteValue());
+                    item.setTab((byte) (int) rs.getInteger("tab", 0));
                     item.setPriceGold(rs.getInteger("gold", 0));
                     item.setPriceGem(rs.getInteger("gem", 0));
                     item.setUpTop(rs.getBoolean("up_top", false));

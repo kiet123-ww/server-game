@@ -28,7 +28,7 @@ public class PetFollowManager extends AbsManager<PetFollow> {
                     int iconID = rs.getInteger("icon", 0);
                     int w = rs.getInteger("width", 0);
                     int h = rs.getInteger("height", 0);
-                    byte nFrame = rs.getInteger("frame", 0).byteValue();
+                    byte nFrame = (byte) (int) rs.getInteger("frame", 0);
                     add(new PetFollow(id, iconID, w, h, nFrame));
                 }
             }

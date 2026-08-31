@@ -30,9 +30,9 @@ public class MiniPetManager implements IManager<MinipetTemplate> {
                 while (cursor.hasNext()) {
                     Document rs = cursor.next();
                     int id = rs.getInteger("id_temp", 0);
-                    short head = rs.getInteger("head", 0).shortValue();
-                    short body = rs.getInteger("body", 0).shortValue();
-                    short leg = rs.getInteger("leg", 0).shortValue();
+                    short head = (short) (int) rs.getInteger("head", 0);
+                    short body = (short) (int) rs.getInteger("body", 0);
+                    short leg = (short) (int) rs.getInteger("leg", 0);
                     add(new MinipetTemplate(id, head, body, leg));
                 }
             }

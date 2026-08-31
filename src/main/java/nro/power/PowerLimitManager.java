@@ -36,7 +36,7 @@ public class PowerLimitManager {
             com.mongodb.client.MongoCursor<org.bson.Document> rs = collection.find().iterator();
             while (rs.hasNext()) {
                 org.bson.Document doc = rs.next();
-                int id = (doc.getInteger("id") != null ? doc.getInteger("id").shortValue() : 0);
+                int id = (doc.getInteger("id") != null ? (short) (int) doc.getInteger("id") : 0);
                 long power = (doc.getLong("power") != null ? doc.getLong("power") : 0L);
                 int hp = (doc.getInteger("hp") != null ? doc.getInteger("hp") : 0);
                 int mp = (doc.getInteger("mp") != null ? doc.getInteger("mp") : 0);

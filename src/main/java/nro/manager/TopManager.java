@@ -52,8 +52,8 @@ public class TopManager {
 
                     player.id = rs.getInteger("id", 0);
                     player.name = rs.getString("name");
-                    player.head = rs.getInteger("head", 0).shortValue();
-                    player.gender = rs.getInteger("gender", 0).byteValue();
+                    player.head = (short) (int) rs.getInteger("head", 0);
+                    player.gender = (byte) (int) rs.getInteger("gender", 0);
 
                     dataArray = (JSONArray) JSONValue.parse(rs.getString("data_point"));
                     player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
@@ -144,8 +144,8 @@ public class TopManager {
 
                 player.id = rs.getInteger("id", 0);
                 player.name = rs.getString("name");
-                player.head = rs.getInteger("head", 0).shortValue();
-                player.gender = rs.getInteger("gender", 0).byteValue();
+                player.head = (short) (int) rs.getInteger("head", 0);
+                player.gender = (byte) (int) rs.getInteger("gender", 0);
                 
                 String task = rs.getString("data_task");
                 int nv = 0;
@@ -230,8 +230,8 @@ public class TopManager {
 
                     player.id = rs.getInteger("id", 0);
                     player.name = rs.getString("name");
-                    player.head = rs.getInteger("head", 0).shortValue();
-                    player.gender = rs.getInteger("gender", 0).byteValue();
+                    player.head = (short) (int) rs.getInteger("head", 0);
+                    player.gender = (byte) (int) rs.getInteger("gender", 0);
                     
                     Object nd = acc.get("NangDong");
                     player.topNangDong = nd != null ? Integer.parseInt(nd.toString()) : 0;
@@ -310,8 +310,8 @@ public class TopManager {
 
                     player.id = rs.getInteger("id", 0);
                     player.name = rs.getString("name");
-                    player.head = rs.getInteger("head", 0).shortValue();
-                    player.gender = rs.getInteger("gender", 0).byteValue();
+                    player.head = (short) (int) rs.getInteger("head", 0);
+                    player.gender = (byte) (int) rs.getInteger("gender", 0);
                     
                     Object tongnap = acc.get("tongnap");
                     player.topVnd = tongnap != null ? Integer.parseInt(tongnap.toString()) : 0;

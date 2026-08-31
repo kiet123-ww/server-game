@@ -57,8 +57,8 @@ public class TopPowerManager {
 
         player.id = rs.getInteger("id", 0);
         player.name = rs.getString("name");
-        player.head = rs.getInteger("head", 0).shortValue();
-        player.gender = rs.getInteger("gender", 0).byteValue();
+        player.head = (short) (int) rs.getInteger("head", 0);
+        player.gender = (byte) (int) rs.getInteger("gender", 0);
         
         Date lastimeloginDate = rs.getDate("lastimelogin");
         if (lastimeloginDate != null) {
