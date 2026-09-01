@@ -893,7 +893,24 @@ public class InventoryService {
         arrangeItems(player.inventory.itemsBag);
         Message msg;
         try {
-            System.out.println("[INVENTORY] Sending item bags packet for: " + (player != null ? player.name : "null") + " (slots=" + player.inventory.itemsBag.size() + ")");
+            System.out.println("========== [INVENTORY BAG for " + (player != null ? player.name : "null") + "] ==========");
+            int filled = 0;
+            if (player != null && player.inventory != null && player.inventory.itemsBag != null) {
+                for (int i = 0; i < player.inventory.itemsBag.size(); i++) {
+                    Item it = player.inventory.itemsBag.get(i);
+                    if (it != null && it.isNotNullItem()) {
+                        filled++;
+                        String tName = it.template != null ? it.template.name : "NULL_TEMPLATE";
+                        System.out.println("  [Bag " + i + "] id=" + (it.template != null ? it.template.id : -1) + " | '" + tName + "' | qty=" + it.quantity + " | options=" + it.itemOptions.size());
+                        for (ItemOption opt : it.itemOptions) {
+                            System.out.println("       * Opt " + (opt.optionTemplate != null ? opt.optionTemplate.id : -1) + ": " + opt.getOptionString());
+                        }
+                    }
+                }
+            }
+            System.out.println("  Total bag items: " + filled + " / " + (player != null && player.inventory != null ? player.inventory.itemsBag.size() : 0));
+            System.out.println("==========================================================");
+
             msg = new Message(-36);
             msg.writer().writeByte(0);
             msg.writer().writeByte(player.inventory.itemsBag.size());
@@ -926,7 +943,24 @@ public class InventoryService {
     public void sendItemBody(Player player) {
         Message msg;
         try {
-            System.out.println("[INVENTORY] Sending item body packet for: " + (player != null ? player.name : "null") + " (slots=" + player.inventory.itemsBody.size() + ")");
+            System.out.println("========== [EQUIPMENT BODY for " + (player != null ? player.name : "null") + "] ==========");
+            int filled = 0;
+            if (player != null && player.inventory != null && player.inventory.itemsBody != null) {
+                for (int i = 0; i < player.inventory.itemsBody.size(); i++) {
+                    Item it = player.inventory.itemsBody.get(i);
+                    if (it != null && it.isNotNullItem()) {
+                        filled++;
+                        String tName = it.template != null ? it.template.name : "NULL_TEMPLATE";
+                        System.out.println("  [Body " + i + "] id=" + (it.template != null ? it.template.id : -1) + " | '" + tName + "' | qty=" + it.quantity + " | options=" + it.itemOptions.size());
+                        for (ItemOption opt : it.itemOptions) {
+                            System.out.println("       * Opt " + (opt.optionTemplate != null ? opt.optionTemplate.id : -1) + ": " + opt.getOptionString());
+                        }
+                    }
+                }
+            }
+            System.out.println("  Total equipped items: " + filled + " / " + (player != null && player.inventory != null ? player.inventory.itemsBody.size() : 0));
+            System.out.println("==========================================================");
+
             msg = new Message(-37);
             msg.writer().writeByte(0);
             msg.writer().writeShort(player.getHead());
@@ -959,7 +993,21 @@ public class InventoryService {
     public void sendItemBox(Player player) {
         Message msg;
         try {
-            System.out.println("[INVENTORY] Sending item box packet for: " + (player != null ? player.name : "null") + " (slots=" + player.inventory.itemsBox.size() + ")");
+            System.out.println("========== [BOX ITEMS for " + (player != null ? player.name : "null") + "] ==========");
+            int filled = 0;
+            if (player != null && player.inventory != null && player.inventory.itemsBox != null) {
+                for (int i = 0; i < player.inventory.itemsBox.size(); i++) {
+                    Item it = player.inventory.itemsBox.get(i);
+                    if (it != null && it.isNotNullItem()) {
+                        filled++;
+                        String tName = it.template != null ? it.template.name : "NULL_TEMPLATE";
+                        System.out.println("  [Box " + i + "] id=" + (it.template != null ? it.template.id : -1) + " | '" + tName + "' | qty=" + it.quantity + " | options=" + it.itemOptions.size());
+                    }
+                }
+            }
+            System.out.println("  Total box items: " + filled + " / " + (player != null && player.inventory != null ? player.inventory.itemsBox.size() : 0));
+            System.out.println("==========================================================");
+
             msg = new Message(-35);
             msg.writer().writeByte(0);
             msg.writer().writeByte(player.inventory.itemsBox.size());

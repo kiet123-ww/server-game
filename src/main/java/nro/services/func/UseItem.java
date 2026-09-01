@@ -88,6 +88,7 @@ public class UseItem {
         try {
             int type = msg.reader().readByte();
             int index = msg.reader().readByte();
+            System.out.println("[ACTION ITEM CMD -40] Player: " + (player != null ? player.name : "null") + " | Type: " + type + ", Slot Index: " + index);
             switch (type) {
                 case ITEM_BOX_TO_BODY_OR_BAG:
                     InventoryService.gI().itemBoxToBodyOrBag(player, index);
@@ -132,6 +133,7 @@ public class UseItem {
             byte type = _msg.reader().readByte();
             int where = _msg.reader().readByte();
             int index = _msg.reader().readByte();
+            System.out.println("[ACTION ITEM CMD -43] Player: " + (player != null ? player.name : "null") + " | DoType: " + type + ", Where: " + where + ", Index: " + index);
 
             switch (type) {
                 case DO_USE_ITEM:
