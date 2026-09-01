@@ -174,14 +174,25 @@ public class ServerManager {
 
     private void activeCommandLine() {
         new Thread(() -> {
-            Scanner sc = new Scanner(System.in);
-            while (true) {
-                String line = sc.nextLine();
-                if (line.equals("baotri")) {
-                    new Thread(() -> {
-                        Maintenance.gI().start(5);
-                    }).start();
+            try {
+                Scanner sc = new Scanner(System.in);
+                while (isRunning) {
+                    if (sc.hasNextLine()) {
+                        String line = sc.nextLine();
+                        if (line.equals("baotri")) {
+                            new Thread(() -> {
+                                Maintenance.gI().start(5);
+                            }).start();
+                        }
+                    } else {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            break;
+                        }
+                    }
                 }
+            } catch (Exception e) {
             }
         }, "Active line").start();
     }
