@@ -72,8 +72,8 @@ public class TopManager {
                                 item.itemOptions.add(new ItemOption(Integer.parseInt(String.valueOf(opt.get(0))),
                                         Integer.parseInt(String.valueOf(opt.get(1)))));
                             }
-                            Long createTime = rs.getLong("create_time");
-                            item.createTime = createTime != null ? createTime : 0L;
+                            Object ct = dataObject.get("create_time");
+                            item.createTime = ct != null ? Long.parseLong(String.valueOf(ct)) : 0L;
                             if (ItemService.gI().isOutOfDateTime(item)) {
                                 item = ItemService.gI().createItemNull();
                             }
@@ -174,8 +174,8 @@ public class TopManager {
                             item.itemOptions.add(new ItemOption(Integer.parseInt(String.valueOf(opt.get(0))),
                                     Integer.parseInt(String.valueOf(opt.get(1)))));
                         }
-                        Long createTime = rs.getLong("create_time");
-                        item.createTime = createTime != null ? createTime : 0L;
+                        Object ct = dataObject.get("create_time");
+                        item.createTime = ct != null ? Long.parseLong(String.valueOf(ct)) : 0L;
                         if (ItemService.gI().isOutOfDateTime(item)) {
                             item = ItemService.gI().createItemNull();
                         }
@@ -253,8 +253,8 @@ public class TopManager {
                                 item.itemOptions.add(new ItemOption(Integer.parseInt(String.valueOf(opt.get(0))),
                                         Integer.parseInt(String.valueOf(opt.get(1)))));
                             }
-                            Long createTime = rs.getLong("create_time");
-                            item.createTime = createTime != null ? createTime : 0L;
+                            Object ct = dataObject.get("create_time");
+                            item.createTime = ct != null ? Long.parseLong(String.valueOf(ct)) : 0L;
                             if (ItemService.gI().isOutOfDateTime(item)) {
                                 item = ItemService.gI().createItemNull();
                             }
@@ -333,8 +333,8 @@ public class TopManager {
                                 item.itemOptions.add(new ItemOption(Integer.parseInt(String.valueOf(opt.get(0))),
                                         Integer.parseInt(String.valueOf(opt.get(1)))));
                             }
-                            Long createTime = rs.getLong("create_time");
-                            item.createTime = createTime != null ? createTime : 0L;
+                            Object ct = dataObject.get("create_time");
+                            item.createTime = ct != null ? Long.parseLong(String.valueOf(ct)) : 0L;
                             if (ItemService.gI().isOutOfDateTime(item)) {
                                 item = ItemService.gI().createItemNull();
                             }

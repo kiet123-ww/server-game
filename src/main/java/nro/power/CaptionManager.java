@@ -41,7 +41,8 @@ public class CaptionManager {
                 String earth = doc.getString("earth");
                 String saiya = doc.getString("saiya");
                 String namek = doc.getString("namek");
-                long power = (doc.getLong("power") != null ? doc.getLong("power") : 0L);
+                Number powerNum = (Number) doc.get("power");
+                long power = powerNum != null ? powerNum.longValue() : 0L;
                 Caption caption = Caption.builder()
                         .id(id)
                         .earth(earth)

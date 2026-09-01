@@ -37,7 +37,8 @@ public class PowerLimitManager {
             while (rs.hasNext()) {
                 org.bson.Document doc = rs.next();
                 int id = (doc.getInteger("id") != null ? (short) (int) doc.getInteger("id") : 0);
-                long power = (doc.getLong("power") != null ? doc.getLong("power") : 0L);
+                Number powerNum = (Number) doc.get("power");
+                long power = powerNum != null ? powerNum.longValue() : 0L;
                 int hp = (doc.getInteger("hp") != null ? doc.getInteger("hp") : 0);
                 int mp = (doc.getInteger("mp") != null ? doc.getInteger("mp") : 0);
                 int damage = (doc.getInteger("damage") != null ? doc.getInteger("damage") : 0);

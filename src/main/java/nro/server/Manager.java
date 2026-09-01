@@ -517,30 +517,39 @@ public class Manager {
             Log.success("Load intrinsic thành công (" + INTRINSICS.size() + ")");
 
             // load task
-            
-            
-            int taskId = -1;
-            TaskMain task = null;
-            while (rs.hasNext()) { org.bson.Document doc = rs.next();
-                int id = (doc.getInteger("id") != null ? doc.getInteger("id") : 0);
-                if (id != taskId) {
-                    taskId = id;
-                    task = new TaskMain();
-                    task.id = taskId;
+            TASKS.clear();
+            Map<Integer, TaskMain> taskMap = new HashMap<>();
+            com.mongodb.client.MongoCollection<org.bson.Document> taskMainColl = db.getCollection("task_main_template");
+            try (com.mongodb.client.MongoCursor<org.bson.Document> curMain = taskMainColl.find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator()) {
+                while (curMain.hasNext()) {
+                    org.bson.Document doc = curMain.next();
+                    int id = (doc.getInteger("id") != null ? doc.getInteger("id") : 0);
+                    TaskMain task = new TaskMain();
+                    task.id = id;
                     task.name = doc.getString("name");
                     task.detail = doc.getString("detail");
                     TASKS.add(task);
+                    taskMap.put(id, task);
                 }
-                SubTaskMain subTask = new SubTaskMain();
-                subTask.name = doc.getString("sub_name");
-                subTask.maxCount = (doc.getInteger("max_count") != null ? (short) (int) doc.getInteger("max_count") : 0);
-                subTask.notify = doc.getString("notify");
-                subTask.npcId = (doc.getInteger("npc_id") != null ? (byte) (int) doc.getInteger("npc_id") : 0);
-                subTask.mapId = (doc.getInteger("map") != null ? (short) (int) doc.getInteger("map") : 0);
-                task.subTasks.add(subTask);
             }
-            
-            
+
+            com.mongodb.client.MongoCollection<org.bson.Document> taskSubColl = db.getCollection("task_sub_template");
+            try (com.mongodb.client.MongoCursor<org.bson.Document> curSub = taskSubColl.find().sort(com.mongodb.client.model.Sorts.ascending("task_main_id")).iterator()) {
+                while (curSub.hasNext()) {
+                    org.bson.Document doc = curSub.next();
+                    int taskMainId = (doc.getInteger("task_main_id") != null ? doc.getInteger("task_main_id") : 0);
+                    TaskMain task = taskMap.get(taskMainId);
+                    if (task != null) {
+                        SubTaskMain subTask = new SubTaskMain();
+                        subTask.name = doc.getString("name");
+                        subTask.maxCount = (doc.getInteger("max_count") != null ? (short) (int) doc.getInteger("max_count") : 0);
+                        subTask.notify = doc.getString("notify");
+                        subTask.npcId = (doc.getInteger("npc_id") != null ? (byte) (int) doc.getInteger("npc_id") : 0);
+                        subTask.mapId = (doc.getInteger("map") != null ? (short) (int) doc.getInteger("map") : 0);
+                        task.subTasks.add(subTask);
+                    }
+                }
+            }
             Log.success("Load task thành công (" + TASKS.size() + ")");
 
             // load side task
@@ -750,21 +759,34 @@ public class Manager {
             Log.success("Thông báo tải dữ liệu images by name thành công (" + IMAGES_BY_NAME.size() + ")");
 
             // load clan
-            
-            
+            CLANS.clear();
+            rs = db.getCollection("clan_sv" + SERVER).find().iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 Clan clan = new Clan();
                 clan.id = (doc.getInteger("id") != null ? doc.getInteger("id") : 0);
                 clan.name = doc.getString("name");
                 clan.slogan = doc.getString("slogan");
                 clan.imgId = (doc.getInteger("img_id") != null ? (byte) (int) doc.getInteger("img_id") : 0);
-                clan.powerPoint = (doc.getLong("power_point") != null ? doc.getLong("power_point") : 0L);
+                clan.powerPoint = ((Number) (doc.get("power_point") == null ? 0L : doc.get("power_point"))).longValue();
                 clan.maxMember = (doc.getInteger("max_member") != null ? (byte) (int) doc.getInteger("max_member") : 0);
                 clan.clanPoint = (doc.getInteger("clan_point") != null ? doc.getInteger("clan_point") : 0);
                 clan.level = (doc.getInteger("level") != null ? (byte) (int) doc.getInteger("level") : 0);
-                clan.createTime = (int) (new java.sql.Timestamp(doc.getDate("create_time").getTime()).getTime() / 1000);
+                Object ct = doc.get("create_time");
+                if (ct instanceof java.util.Date) {
+                    clan.createTime = (int) (((java.util.Date) ct).getTime() / 1000);
+                } else if (ct instanceof Number) {
+                    clan.createTime = ((Number) ct).intValue();
+                } else if (ct != null) {
+                    try {
+                        clan.createTime = (int) (java.sql.Timestamp.valueOf(ct.toString()).getTime() / 1000);
+                    } catch (Exception e) {
+                        clan.createTime = (int) (System.currentTimeMillis() / 1000);
+                    }
+                } else {
+                    clan.createTime = (int) (System.currentTimeMillis() / 1000);
+                }
 
-                dataArray = (JSONArray) jv.parse(doc.getString("members"));
+                dataArray = (JSONArray) jv.parse(doc.getString("members") == null ? "[]" : doc.getString("members"));
                 for (int i = 0; i < dataArray.size(); i++) {
                     dataObject = (JSONObject) jv.parse(String.valueOf(dataArray.get(i)));
                     ClanMember cm = new ClanMember();
@@ -787,26 +809,21 @@ public class Manager {
                     }
                     clan.addClanMember(cm);
                 }
-                dataArray = (JSONArray) JSONValue.parse(doc.getString("thanhTichBDKB"));
-                if (!dataArray.isEmpty()) {
+                dataArray = (JSONArray) JSONValue.parse(doc.getString("thanhTichBDKB") == null ? "[]" : doc.getString("thanhTichBDKB"));
+                if (dataArray != null && !dataArray.isEmpty()) {
                     clan.levelDoneBanDoKhoBau = Integer.parseInt(String.valueOf(dataArray.get(0)));
                     clan.thoiGianHoanThanhBDKB = Long.parseLong(String.valueOf(dataArray.get(1)));
                 }
                 CLANS.add(clan);
-                dataArray.clear();
-                dataObject.clear();
+                if (dataArray != null) dataArray.clear();
+                if (dataObject != null) dataObject.clear();
             }
-            
-            
 
             rs = db.getCollection("clan_sv" + SERVER).find().sort(com.mongodb.client.model.Sorts.descending("id")).limit(1).iterator();
             if (rs.hasNext()) {
                 org.bson.Document doc = rs.next();
                 Clan.NEXT_ID = (doc.getInteger("id") != null ? doc.getInteger("id") : 0) + 1;
             }
-
-            
-            
 
             Log.success("Load clan thành công (" + CLANS.size() + "), clan next id: " + Clan.NEXT_ID);
 

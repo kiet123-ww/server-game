@@ -60,9 +60,13 @@ public class TopPowerManager {
         player.head = (short) (int) rs.getInteger("head", 0);
         player.gender = (byte) (int) rs.getInteger("gender", 0);
         
-        Date lastimeloginDate = rs.getDate("lastimelogin");
-        if (lastimeloginDate != null) {
-            player.lastimelogin = new java.sql.Timestamp(lastimeloginDate.getTime());
+        Object ltl = rs.get("lastimelogin");
+        if (ltl instanceof Date) {
+            player.lastimelogin = new java.sql.Timestamp(((Date) ltl).getTime());
+        } else if (ltl != null) {
+            try {
+                player.lastimelogin = java.sql.Timestamp.valueOf(ltl.toString());
+            } catch (Exception e) {}
         }
 
         processPlayerDataPoint(rs.getString("data_point"), player);

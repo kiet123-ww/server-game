@@ -59,7 +59,15 @@ public class GiftService {
                 return;
             }
 
-            Date expiresAt = res.getDate("expires_at");
+            Object expObj = res.get("expires_at");
+            Date expiresAt = null;
+            if (expObj instanceof Date) {
+                expiresAt = (Date) expObj;
+            } else if (expObj != null) {
+                try {
+                    expiresAt = java.sql.Timestamp.valueOf(expObj.toString());
+                } catch (Exception e) {}
+            }
             if (expiresAt != null && expiresAt.before(new Date())) {
                 Service.getInstance().sendThongBaoOK(player, "Mã quà tặng không tồn tại hoặc đã hết hạn.");
                 return;

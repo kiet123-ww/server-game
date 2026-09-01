@@ -64,12 +64,16 @@ public class TopKillWhisManager {
         player.gender = (byte) (int) rs.getInteger("gender", 0);
 
         player.levelKillWhisDone = rs.getInteger("levelKillWhis", 0);
-        Long timeKillWhis = rs.getLong("timeKillWhis");
-        player.timeKillWhis = timeKillWhis != null ? timeKillWhis : 0L;
+        Object tkw = rs.get("timeKillWhis");
+        player.timeKillWhis = tkw != null ? Long.parseLong(tkw.toString()) : 0L;
         
-        Date lastimeloginDate = rs.getDate("lastimelogin");
-        if (lastimeloginDate != null) {
-            player.lastimelogin = new java.sql.Timestamp(lastimeloginDate.getTime());
+        Object ltl = rs.get("lastimelogin");
+        if (ltl instanceof Date) {
+            player.lastimelogin = new java.sql.Timestamp(((Date) ltl).getTime());
+        } else if (ltl != null) {
+            try {
+                player.lastimelogin = java.sql.Timestamp.valueOf(ltl.toString());
+            } catch (Exception e) {}
         }
         
         extractDataPoint(rs.getString("data_point"), player);

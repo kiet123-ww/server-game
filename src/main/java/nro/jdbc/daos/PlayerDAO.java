@@ -265,7 +265,9 @@ public class PlayerDAO {
             String blackBall = dataBlackBall.toJSONString();
 
             com.mongodb.client.MongoCollection<org.bson.Document> collection = nro.jdbc.MongoDBConnection.getDatabase().getCollection("player");
-            org.bson.Document doc = new org.bson.Document("account_id", userId)
+            int newPlayerId = AccountDAO.getNextSequenceValue("playerId");
+            org.bson.Document doc = new org.bson.Document("id", newPlayerId)
+                    .append("account_id", userId)
                     .append("name", name)
                     .append("head", hair)
                     .append("gender", gender)

@@ -113,13 +113,13 @@ public class GodGK {
                     Player player = new Player();
 
                     // base info
-                    player.id = rs.getInteger("id");
+                    player.id = rs.getInteger("id", 0);
                     player.name = rs.getString("name");
-                    player.head = (short) (int) rs.getInteger("head");
-                    player.gender = (byte) (int) rs.getInteger("gender");
+                    player.head = (short) (int) rs.getInteger("head", 0);
+                    player.gender = (byte) (int) rs.getInteger("gender", 0);
                     player.haveTennisSpaceShip = (rs.get("have_tennis_space_ship") != null && (rs.get("have_tennis_space_ship").equals(1) || rs.get("have_tennis_space_ship").equals(true)));
 
-                    int clanId = rs.getInteger("clan_id_sv" + Manager.SERVER);
+                    int clanId = rs.getInteger("clan_id_sv" + Manager.SERVER, -1);
                     if (clanId != -1) {
                         Clan clan = ClanService.gI().getClanById(clanId);
                         if (clan != null) {
@@ -135,7 +135,7 @@ public class GodGK {
                         }
                     }
                     // diem su kien
-                    int evPoint = rs.getInteger("event_point");
+                    int evPoint = rs.getInteger("event_point", 0);
                     player.event.setEventPoint(evPoint);
 
                     dataArray = (JSONArray) JSONValue.parse(rs.getString("sk_tet") == null ? "[]" : rs.getString("sk_tet"));
@@ -218,9 +218,11 @@ public class GodGK {
                     player.MaBaoVe = Integer.parseInt(String.valueOf(dataArray.get(1)));
                     dataArray.clear();
 
-                    player.levelKillWhisDone = rs.getInteger("levelKillWhis");
+                    Object lkw = rs.get("levelKillWhis");
+                    player.levelKillWhisDone = lkw != null ? Integer.parseInt(lkw.toString()) : 0;
 
-                    player.timeKillWhis = ((Number) (rs.get("timeKillWhis") == null ? 0L : rs.get("timeKillWhis"))).longValue();
+                    Object tkw = rs.get("timeKillWhis");
+                    player.timeKillWhis = tkw != null ? Long.parseLong(tkw.toString()) : 0L;
 
                     player.event.setDiemTichLuy(session.diemTichNap);
 
@@ -229,7 +231,7 @@ public class GodGK {
                     player.event.luotNhanBuaMienPhi = Integer.parseInt(String.valueOf(dataArray.get(1)));
                     dataArray.clear();
 
-                    player.event.setMocNapDaNhan(rs.getInteger("moc_nap"));
+                    player.event.setMocNapDaNhan(rs.getInteger("moc_nap", 0));
 
                     player.server = session.server;
                     // data tọa độ
@@ -532,10 +534,15 @@ public class GodGK {
                     dataArray = (JSONArray) jv.parse(rs.getString("data_task") == null ? "[]" : rs.getString("data_task"));
                     TaskMain taskMain = TaskService.gI().getTaskMainById(player,
                             Byte.parseByte(dataArray.get(1).toString()));
-                    taskMain.subTasks.get(Integer.parseInt(dataArray.get(2).toString())).count = Short
-                            .parseShort(dataArray.get(0).toString());
-                    taskMain.index = Byte.parseByte(dataArray.get(2).toString());
-                    player.playerTask.taskMain = taskMain;
+                    if (taskMain != null) {
+                        int subTaskIdx = Integer.parseInt(dataArray.get(2).toString());
+                        if (subTaskIdx >= 0 && subTaskIdx < taskMain.subTasks.size()) {
+                            taskMain.subTasks.get(subTaskIdx).count = Short
+                                    .parseShort(dataArray.get(0).toString());
+                        }
+                        taskMain.index = (byte) subTaskIdx;
+                        player.playerTask.taskMain = taskMain;
+                    }
                     dataArray.clear();
 
                     // data nhiệm vụ hàng ngày

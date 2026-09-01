@@ -70,7 +70,7 @@ public class AccountDAO {
         }
     }
 
-    private static int getNextSequenceValue(String sequenceName) {
+    public static int getNextSequenceValue(String sequenceName) {
         MongoCollection<Document> counters = MongoDBConnection.getDatabase().getCollection("counters");
         Document query = new Document("_id", sequenceName);
         Document update = new Document("$inc", new Document("sequence_value", 1));
