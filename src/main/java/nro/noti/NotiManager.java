@@ -42,7 +42,8 @@ public class NotiManager {
             while (cursor.hasNext()) {
                 Document doc = cursor.next();
                 Notification notification = new Notification();
-                notification.setId(doc.getInteger("id"));
+                Object idObj = doc.get("id");
+                notification.setId(idObj != null ? Integer.parseInt(idObj.toString()) : 0);
                 notification.setContent(doc.getString("content"));
                 notification.setTitle(doc.getString("title"));
                 addNoti(notification);

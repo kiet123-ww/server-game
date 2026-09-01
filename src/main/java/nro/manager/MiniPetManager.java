@@ -25,14 +25,19 @@ public class MiniPetManager implements IManager<MinipetTemplate> {
 
     public void load() {
         try {
+            list.clear();
             MongoCollection<Document> collection = MongoDBConnection.getDatabase().getCollection("mini_pet");
             try (MongoCursor<Document> cursor = collection.find().iterator()) {
                 while (cursor.hasNext()) {
                     Document rs = cursor.next();
-                    int id = rs.getInteger("id_temp", 0);
-                    short head = (short) (int) rs.getInteger("head", 0);
-                    short body = (short) (int) rs.getInteger("body", 0);
-                    short leg = (short) (int) rs.getInteger("leg", 0);
+                    Object idObj = rs.get("id_temp");
+                    int id = idObj != null ? Integer.parseInt(idObj.toString()) : 0;
+                    Object headObj = rs.get("head");
+                    short head = headObj != null ? Short.parseShort(headObj.toString()) : 0;
+                    Object bodyObj = rs.get("body");
+                    short body = bodyObj != null ? Short.parseShort(bodyObj.toString()) : 0;
+                    Object legObj = rs.get("leg");
+                    short leg = legObj != null ? Short.parseShort(legObj.toString()) : 0;
                     add(new MinipetTemplate(id, head, body, leg));
                 }
             }

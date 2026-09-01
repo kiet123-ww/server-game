@@ -29,11 +29,13 @@ public class AttributeTemplateManager {
 
     public void load() {
         try {
+            list.clear();
             MongoCollection<Document> collection = MongoDBConnection.getDatabase().getCollection("attribute_template");
             MongoCursor<Document> cursor = collection.find().iterator();
             while (cursor.hasNext()) {
                 Document doc = cursor.next();
-                int id = doc.getInteger("id");
+                Object idObj = doc.get("id");
+                int id = idObj != null ? Integer.parseInt(idObj.toString()) : 0;
                 String name = doc.getString("name");
                 AttributeTemplate at = AttributeTemplate.builder()
                         .id(id)

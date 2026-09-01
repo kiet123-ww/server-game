@@ -26,16 +26,20 @@ public class AchiveManager implements IManager<AchivementTemplate> {
 
     public void load() {
         try {
+            list.clear();
             com.mongodb.client.MongoCollection<org.bson.Document> collection = nro.jdbc.MongoDBConnection.getDatabase().getCollection("achivements");
             com.mongodb.client.MongoCursor<org.bson.Document> rs = collection.find().iterator();
             while (rs.hasNext()) {
                 org.bson.Document doc = rs.next();
-                int id = (doc.getInteger("id") != null ? doc.getInteger("id") : 0);
+                Object idObj = doc.get("id");
+                int id = idObj != null ? Integer.parseInt(idObj.toString()) : 0;
                 String name = doc.getString("name");
                 String detail = doc.getString("detail");
-                int money = (doc.getInteger("money") != null ? doc.getInteger("money") : 0);
-                int maxCount = (doc.getInteger("max_count") != null ? doc.getInteger("max_count") : 0);
-                list.add(new AchivementTemplate(id,name,detail,money,maxCount));
+                Object moneyObj = doc.get("money");
+                int money = moneyObj != null ? Integer.parseInt(moneyObj.toString()) : 0;
+                Object mcObj = doc.get("max_count");
+                int maxCount = mcObj != null ? Integer.parseInt(mcObj.toString()) : 0;
+                list.add(new AchivementTemplate(id, name, detail, money, maxCount));
             }
         } catch (Exception ex) {
             ex.printStackTrace();

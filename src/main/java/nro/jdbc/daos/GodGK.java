@@ -575,11 +575,13 @@ public class GodGK {
                         achivement.setFinish(Integer.parseInt(dataObject.get("finish").toString()) == 1);
                         achivement.setReceive(Integer.parseInt(dataObject.get("receive").toString()) == 1);
                         AchivementTemplate a = AchiveManager.getInstance().findByID(achivement.getId());
-                        achivement.setName(a.getName());
-                        achivement.setDetail(a.getDetail());
-                        achivement.setMaxCount(a.getMaxCount());
-                        achivement.setMoney(a.getMoney());
-                        player.playerTask.achivements.add(achivement);
+                        if (a != null) {
+                            achivement.setName(a.getName());
+                            achivement.setDetail(a.getDetail());
+                            achivement.setMaxCount(a.getMaxCount());
+                            achivement.setMoney(a.getMoney());
+                            player.playerTask.achivements.add(achivement);
+                        }
                     }
 
                     List<AchivementTemplate> listAchivements = AchiveManager.getInstance().getList();

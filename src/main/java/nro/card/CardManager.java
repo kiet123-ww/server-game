@@ -33,6 +33,7 @@ public class CardManager {
 
     public void load() {
         try {
+            cardTemplates.clear();
             MongoCollection<Document> collection = MongoDBConnection.getDatabase().getCollection("collection_book");
             try (MongoCursor<Document> cursor = collection.find().iterator()) {
                 while (cursor.hasNext()) {

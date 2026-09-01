@@ -26,6 +26,7 @@ public class EffectEventManager {
 
     public void load() {
         try {
+            list.clear();
             com.mongodb.client.MongoCollection<org.bson.Document> collection = nro.jdbc.MongoDBConnection.getDatabase().getCollection("map_template");
             com.mongodb.client.MongoCursor<org.bson.Document> rs = collection.find().iterator();
             while (rs.hasNext()) {
