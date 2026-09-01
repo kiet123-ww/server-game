@@ -963,6 +963,7 @@ public class Service {
         if (!player.isPet && !player.isBoss) {
             Message msg;
             try {
+                System.out.println("[SERVICE] Sending point packet for: " + player.name + " (HP=" + player.nPoint.hp + "/" + player.nPoint.hpMax + ", Power=" + player.nPoint.power + ")");
                 msg = new Message(-42);
                 msg.writer().writeInt(player.nPoint.hpg);
                 msg.writer().writeInt(player.nPoint.mpg);
@@ -985,7 +986,8 @@ public class Service {
                 player.sendMessage(msg);
                 msg.cleanup();
             } catch (Exception e) {
-                Log.error(Service.class, e);
+                System.err.println("[ERROR in Service.point for " + player.name + "]: " + e.getMessage());
+                e.printStackTrace();
             }
         }
     }
@@ -994,6 +996,7 @@ public class Service {
         if (pl == null) {
             return;
         }
+        System.out.println("[SERVICE] Sending player main packet for: " + pl.name + " (body=" + pl.inventory.itemsBody.size() + ", bag=" + pl.inventory.itemsBag.size() + ", box=" + pl.inventory.itemsBox.size() + ")");
         Message msg;
         try {
             msg = messageSubCommand((byte) 0);
@@ -1111,7 +1114,8 @@ public class Service {
             pl.sendMessage(msg);
             msg.cleanup();
         } catch (Exception e) {
-            Log.error(Service.class, e);
+            System.err.println("[ERROR in Service.player for " + (pl != null ? pl.name : "null") + "]: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

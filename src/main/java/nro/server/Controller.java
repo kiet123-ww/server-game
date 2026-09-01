@@ -41,8 +41,8 @@ public class Controller {
         try {
             Player player = _session.player;
             byte cmd = _msg.command;
-            if (Manager.debug) {
-                System.out.println("CMD receive: " + cmd);
+            if (cmd != -7) {
+                System.out.println("[IN-GAME CMD " + cmd + "] Player: " + (player != null ? player.name : "null"));
             }
             switch (cmd) {
                 case Cmd.KIGUI:
@@ -542,9 +542,8 @@ public class Controller {
 //                System.out.println("Time do controller (" + cmd + "): " + (System.currentTimeMillis() - st) + " ms");
             }
         } catch (Exception e) {
-            logger.error("Err controller message command: " + _msg.command, e);
-//            Log.logException(Controller.class, e);
-//            Log.warning("Lỗi controller message command: " + _msg.command);
+            System.err.println("[ERROR on CMD " + (_msg != null ? _msg.command : "null") + "]: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -645,7 +644,7 @@ public class Controller {
             try {
                 Player player = _session.player;
                 byte cmd = _msg.reader().readByte();
-//                System.out.println("CMD receive -28 / " + cmd);
+                System.out.println("[IN-GAME CMD -28 Sub " + cmd + "] Player: " + (player != null ? player.name : "null"));
                 switch (cmd) {
                     case 2:
                         createChar(_session, _msg);
@@ -684,8 +683,9 @@ public class Controller {
                     default:
                         break;
                 }
-            } catch (IOException e) {
-                Log.error(Controller.class, e);
+            } catch (Exception e) {
+                System.err.println("[ERROR on CMD -28]: " + e.getMessage());
+                e.printStackTrace();
             }
         }
     }
@@ -695,6 +695,7 @@ public class Controller {
             try {
                 Player player = _session.player;
                 byte command = _msg.reader().readByte();
+                System.out.println("[IN-GAME CMD -30 Sub " + command + "] Player: " + (player != null ? player.name : "null"));
                 switch (command) {
                     case 16:
                         byte type = _msg.reader().readByte();
@@ -711,8 +712,9 @@ public class Controller {
                     default:
                         break;
                 }
-            } catch (IOException e) {
-                //e.printStackTrace();
+            } catch (Exception e) {
+                System.err.println("[ERROR on CMD -30]: " + e.getMessage());
+                e.printStackTrace();
             }
         }
     }

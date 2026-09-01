@@ -893,6 +893,7 @@ public class InventoryService {
         arrangeItems(player.inventory.itemsBag);
         Message msg;
         try {
+            System.out.println("[INVENTORY] Sending item bags packet for: " + (player != null ? player.name : "null") + " (slots=" + player.inventory.itemsBag.size() + ")");
             msg = new Message(-36);
             msg.writer().writeByte(0);
             msg.writer().writeByte(player.inventory.itemsBag.size());
@@ -917,6 +918,7 @@ public class InventoryService {
             player.sendMessage(msg);
             msg.cleanup();
         } catch (Exception e) {
+            System.err.println("[ERROR in InventoryService.sendItemBags for " + (player != null ? player.name : "null") + "]: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -924,6 +926,7 @@ public class InventoryService {
     public void sendItemBody(Player player) {
         Message msg;
         try {
+            System.out.println("[INVENTORY] Sending item body packet for: " + (player != null ? player.name : "null") + " (slots=" + player.inventory.itemsBody.size() + ")");
             msg = new Message(-37);
             msg.writer().writeByte(0);
             msg.writer().writeShort(player.getHead());
@@ -947,6 +950,8 @@ public class InventoryService {
             player.sendMessage(msg);
             msg.cleanup();
         } catch (Exception e) {
+            System.err.println("[ERROR in InventoryService.sendItemBody for " + (player != null ? player.name : "null") + "]: " + e.getMessage());
+            e.printStackTrace();
         }
         Service.getInstance().Send_Caitrang(player);
     }
@@ -954,6 +959,7 @@ public class InventoryService {
     public void sendItemBox(Player player) {
         Message msg;
         try {
+            System.out.println("[INVENTORY] Sending item box packet for: " + (player != null ? player.name : "null") + " (slots=" + player.inventory.itemsBox.size() + ")");
             msg = new Message(-35);
             msg.writer().writeByte(0);
             msg.writer().writeByte(player.inventory.itemsBox.size());
@@ -974,6 +980,8 @@ public class InventoryService {
             player.sendMessage(msg);
             msg.cleanup();
         } catch (Exception e) {
+            System.err.println("[ERROR in InventoryService.sendItemBox for " + (player != null ? player.name : "null") + "]: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

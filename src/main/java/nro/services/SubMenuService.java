@@ -30,22 +30,31 @@ public class SubMenuService {
     }
 
     public void controller(Player player, int playerTarget, int menuId) {
-        Player plTarget = Client.gI().getPlayer(playerTarget);
-        switch (menuId) {
-            case BAN:
-                if (plTarget != null) {
-                    String[] selects = new String[] { "Đồng ý", "Hủy" };
-                    NpcService.gI().createMenuConMeo(player, ConstNpc.BAN_PLAYER, -1,
-                            "Bạn có chắc chắn muốn ban " + plTarget.name, selects, plTarget);
-                }
-                break;
-            case BUFF_PET:
-                if (plTarget != null) {
-                    String[] selects = new String[] { "Đồng ý", "Hủy" };
-                    NpcService.gI().createMenuConMeo(player, ConstNpc.BUFF_PET, -1,
-                            "Bạn có chắc chắn muốn phát đệ tử cho " + plTarget.name, selects, plTarget);
-                }
-                break;
+        System.out.println("[SUBMENU] Player: " + (player != null ? player.name : "null") + " target: " + playerTarget + " menuId: " + menuId);
+        try {
+            Player plTarget = Client.gI().getPlayer(playerTarget);
+            switch (menuId) {
+                case BAN:
+                    if (plTarget != null) {
+                        String[] selects = new String[] { "Đồng ý", "Hủy" };
+                        NpcService.gI().createMenuConMeo(player, ConstNpc.BAN_PLAYER, -1,
+                                "Bạn có chắc chắn muốn ban " + plTarget.name, selects, plTarget);
+                    }
+                    break;
+                case BUFF_PET:
+                    if (plTarget != null) {
+                        String[] selects = new String[] { "Đồng ý", "Hủy" };
+                        NpcService.gI().createMenuConMeo(player, ConstNpc.BUFF_PET, -1,
+                                "Bạn có chắc chắn muốn phát đệ tử cho " + plTarget.name, selects, plTarget);
+                    }
+                    break;
+                default:
+                    System.out.println("[SUBMENU] Unknown menuId: " + menuId);
+                    break;
+            }
+        } catch (Exception e) {
+            System.err.println("[ERROR in SubMenuService]: " + e.getMessage());
+            e.printStackTrace();
         }
         Service.getInstance().hideWaitDialog(player);
     }
