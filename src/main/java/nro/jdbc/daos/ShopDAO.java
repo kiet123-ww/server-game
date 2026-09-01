@@ -81,7 +81,8 @@ public class ShopDAO {
                     itemShop.isNew = (rs.get("is_new") != null && (rs.get("is_new").equals(1) || rs.get("is_new").equals(true)));
                     itemShop.itemExchange = rs.getInteger("item_exchange", -1);
                     if (itemShop.itemExchange != -1) {
-                        itemShop.iconSpec = ItemService.gI().getTemplate(itemShop.itemExchange).iconID;
+                        nro.models.item.ItemTemplate tempExchange = ItemService.gI().getTemplate(itemShop.itemExchange);
+                        itemShop.iconSpec = tempExchange != null ? tempExchange.iconID : -1;
                         itemShop.costSpec = rs.getInteger("quantity_exchange", 0);
                     }
                     // thay đổi vật phẩm trong shop

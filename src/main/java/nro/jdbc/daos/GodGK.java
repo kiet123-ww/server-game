@@ -683,14 +683,16 @@ public class GodGK {
                     player.setCollectionBook(book);
                     List<Item> itemsBody = player.inventory.itemsBody;
 
-                    if (itemsBody.get(11).isNotNullItem()) {
+                    if (itemsBody.size() > 11 && itemsBody.get(11).isNotNullItem()) {
                         MiniPet.callMiniPet(player, (player.inventory.itemsBody.get(11).template.id));
                     }
 
-                    if (itemsBody.get(10).isNotNullItem()) {
+                    if (itemsBody.size() > 10 && itemsBody.get(10).isNotNullItem()) {
                         PetFollow pet = PetFollowManager.gI().findByID(itemsBody.get(10).getId());
-                        player.setPetFollow(pet);
-                        PlayerService.gI().sendPetFollow(player);
+                        if (pet != null) {
+                            player.setPetFollow(pet);
+                            PlayerService.gI().sendPetFollow(player);
+                        }
                     }
 
                     Object ftlObj = rs.get("firstTimeLogin");
@@ -847,6 +849,7 @@ public class GodGK {
                 // connection handled by mongo driver automatically
             }
         } catch (Exception ex) {
+            System.err.println("[ERROR in GodGK.loadPlayer for userId=" + session.userId + "]: " + ex.getMessage());
             ex.printStackTrace();
             session.dataLoadFailed = true;
         }
