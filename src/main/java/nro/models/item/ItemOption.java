@@ -33,6 +33,9 @@ public class ItemOption {
     }
 
     public String getOptionString() {
+        if (this.optionTemplate == null) {
+            return "";
+        }
         String key = this.optionTemplate.name + "#" + this.param + "#";
         String value = OPTION_STRING.get(key);
         if (value == null) {
@@ -43,6 +46,9 @@ public class ItemOption {
     }
     
     public String getOptionString(int param) {
+        if (this.optionTemplate == null) {
+            return "";
+        }
         String key = this.optionTemplate.name + "#" + param + "#";
         String value = OPTION_STRING.get(key);
         if (value == null) {
@@ -53,6 +59,9 @@ public class ItemOption {
     }
 
     public ItemOption format() {
+        if (this.optionTemplate == null) {
+            return this;
+        }
         int id = optionTemplate.id;
         int param = this.param;
         if (param > Short.MAX_VALUE) {

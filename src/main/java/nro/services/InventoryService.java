@@ -895,27 +895,22 @@ public class InventoryService {
         try {
             msg = new Message(-36);
             msg.writer().writeByte(0);
-            int count = 0;
-            for (Item item : player.inventory.itemsBag) {
-                if (item.isNotNullItem()) {
-                    count++;
-                }
-            }
-            msg.writer().writeByte(count);
+            msg.writer().writeByte(player.inventory.itemsBag.size());
             for (int i = 0; i < player.inventory.itemsBag.size(); i++) {
                 Item item = player.inventory.itemsBag.get(i);
                 if (!item.isNotNullItem()) {
-                    continue;
-                }
-                msg.writer().writeShort(item.template.id);
-                msg.writer().writeInt(item.quantity);
-                msg.writer().writeUTF(item.getInfo());
-                msg.writer().writeUTF(item.getContent());
-                List<ItemOption> itemOptions = item.getDisplayOptions();
-                msg.writer().writeByte(itemOptions.size()); // options
-                for (ItemOption o : itemOptions) {
-                    msg.writer().writeByte(o.optionTemplate.id);
-                    msg.writer().writeShort(o.param);
+                    msg.writer().writeShort(-1);
+                } else {
+                    msg.writer().writeShort(item.template.id);
+                    msg.writer().writeInt(item.quantity);
+                    msg.writer().writeUTF(item.getInfo());
+                    msg.writer().writeUTF(item.getContent());
+                    List<ItemOption> itemOptions = item.getDisplayOptions();
+                    msg.writer().writeByte(itemOptions.size()); // options
+                    for (ItemOption o : itemOptions) {
+                        msg.writer().writeByte(o.optionTemplate.id);
+                        msg.writer().writeShort(o.param);
+                    }
                 }
             }
 

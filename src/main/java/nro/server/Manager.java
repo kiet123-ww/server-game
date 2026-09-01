@@ -291,6 +291,19 @@ public class Manager {
         JSONObject dataObject = null;
         try {
             com.mongodb.client.MongoDatabase db = nro.jdbc.MongoDBConnection.getDatabase();
+            ITEM_TEMPLATES.clear();
+            ITEM_OPTION_TEMPLATES.clear();
+            NPC_TEMPLATES.clear();
+            MOB_TEMPLATES.clear();
+            HEAD_AVATARS.clear();
+            FLAGS_BAGS.clear();
+            CAI_TRANGS.clear();
+            INTRINSIC_TD.clear();
+            INTRINSIC_NM.clear();
+            INTRINSIC_XD.clear();
+            SIDE_TASKS_TEMPLATE.clear();
+            NCLASS.clear();
+            IMAGES_BY_NAME.clear();
             // load part
             PartManager.getInstance().load();
 
@@ -604,6 +617,7 @@ public class Manager {
                 ItemOptionTemplate optionTemp = new ItemOptionTemplate();
                 optionTemp.id = (doc.getInteger("id") != null ? doc.getInteger("id") : 0);
                 optionTemp.name = doc.getString("name");
+                optionTemp.type = (doc.getInteger("type") != null ? (byte) (int) doc.getInteger("type") : 0);
                 ITEM_OPTION_TEMPLATES.add(optionTemp);
             }
             
