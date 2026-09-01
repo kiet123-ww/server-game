@@ -298,7 +298,7 @@ public class Manager {
             long countRow = db.getCollection("map_template").countDocuments();
             if (countRow > 0) {
                 MAP_TEMPLATES = new MapTemplate[(int)countRow];
-                rs = db.getCollection("map_template").find().iterator();
+                rs = db.getCollection("map_template").find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator();
                 short i = 0;
                 while (rs.hasNext()) { org.bson.Document doc = rs.next();
                     MapTemplate mapTemplate = new MapTemplate();
@@ -394,7 +394,7 @@ public class Manager {
             }
 
             // load skill
-            rs = db.getCollection("skill_template").find().iterator();
+            rs = db.getCollection("skill_template").find().sort(com.mongodb.client.model.Sorts.ascending("nclass_id", "slot")).iterator();
             byte nClassId = -1;
             NClass nClass = null;
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
@@ -443,7 +443,7 @@ public class Manager {
             Log.success("Load skill thành công (" + NCLASS.size() + ")");
 
             // load head avatar
-            rs = db.getCollection("head_avatar").find().iterator();
+            rs = db.getCollection("head_avatar").find().sort(com.mongodb.client.model.Sorts.ascending("head_id")).iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 HeadAvatar headAvatar = new HeadAvatar((doc.getInteger("head_id") != null ? doc.getInteger("head_id") : 0), (doc.getInteger("avatar_id") != null ? doc.getInteger("avatar_id") : 0));
                 HEAD_AVATARS.add(headAvatar);
@@ -453,7 +453,7 @@ public class Manager {
             Log.success("Load head avatar thành công (" + HEAD_AVATARS.size() + ")");
 
             // load flag bag
-            rs = db.getCollection("flag_bag").find().iterator();
+            rs = db.getCollection("flag_bag").find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 FlagBag flagBag = new FlagBag();
                 flagBag.id = (doc.getInteger("id") != null ? doc.getInteger("id") : 0);
@@ -473,7 +473,7 @@ public class Manager {
             Log.success("Load flag bag thành công (" + FLAGS_BAGS.size() + ")");
 
             // load cải trang
-            rs = db.getCollection("cai_trang").find().iterator();
+            rs = db.getCollection("cai_trang").find().sort(com.mongodb.client.model.Sorts.ascending("id_temp")).iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 CaiTrang caiTrang = new CaiTrang((doc.getInteger("id_temp") != null ? doc.getInteger("id_temp") : 0),
                         (doc.getInteger("head") != null ? doc.getInteger("head") : 0), (doc.getInteger("body") != null ? doc.getInteger("body") : 0), (doc.getInteger("leg") != null ? doc.getInteger("leg") : 0), (doc.getInteger("bag") != null ? doc.getInteger("bag") : 0));
@@ -484,7 +484,7 @@ public class Manager {
             Log.success("Load cải trang thành công (" + CAI_TRANGS.size() + ")");
 
             // load intrinsic
-            rs = db.getCollection("intrinsic").find().iterator();
+            rs = db.getCollection("intrinsic").find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 Intrinsic intrinsic = new Intrinsic();
                 intrinsic.id = (doc.getInteger("id") != null ? (byte) (int) doc.getInteger("id") : 0);
@@ -553,7 +553,7 @@ public class Manager {
             Log.success("Load task thành công (" + TASKS.size() + ")");
 
             // load side task
-            rs = db.getCollection("side_task_template").find().iterator();
+            rs = db.getCollection("side_task_template").find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 SideTaskTemplate sideTask = new SideTaskTemplate();
                 sideTask.id = (doc.getInteger("id") != null ? doc.getInteger("id") : 0);
@@ -580,7 +580,7 @@ public class Manager {
             Log.success("Load side task thành công (" + SIDE_TASKS_TEMPLATE.size() + ")");
 
             // load item template
-            rs = db.getCollection("item_template").find().iterator();
+            rs = db.getCollection("item_template").find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 ItemTemplate itemTemp = new ItemTemplate();
                 itemTemp.id = (doc.getInteger("id") != null ? (short) (int) doc.getInteger("id") : 0);
@@ -599,7 +599,7 @@ public class Manager {
             Log.success("Load map item template thành công (" + ITEM_TEMPLATES.size() + ")");
 
             // load item option template
-            rs = db.getCollection("item_option_template").find().iterator();
+            rs = db.getCollection("item_option_template").find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 ItemOptionTemplate optionTemp = new ItemOptionTemplate();
                 optionTemp.id = (doc.getInteger("id") != null ? doc.getInteger("id") : 0);
@@ -715,7 +715,7 @@ public class Manager {
             }
             Log.success("Load reward lucky round thành công (" + MOB_REWARDS.size() + ")");
             // load mob template
-            rs = db.getCollection("mob_template").find().iterator();
+            rs = db.getCollection("mob_template").find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 MobTemplate mobTemp = new MobTemplate();
                 mobTemp.id = (doc.getInteger("id") != null ? (byte) (int) doc.getInteger("id") : 0);
@@ -734,7 +734,7 @@ public class Manager {
             Log.success("Load mob template thành công (" + MOB_TEMPLATES.size() + ")");
 
             // load npc template
-            rs = db.getCollection("npc_template").find().iterator();
+            rs = db.getCollection("npc_template").find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator();
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 NpcTemplate npcTemp = new NpcTemplate();
                 npcTemp.id = (doc.getInteger("id") != null ? (byte) (int) doc.getInteger("id") : 0);

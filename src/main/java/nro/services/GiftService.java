@@ -80,8 +80,8 @@ public class GiftService {
             Number typeNum = (Number) res.get("type");
             byte type = typeNum != null ? typeNum.byteValue() : 0;
             
-            Boolean activeObj = res.getBoolean("active");
-            boolean active = activeObj != null ? activeObj : false;
+            Object activeObj = res.get("active");
+            boolean active = activeObj != null && (activeObj.equals(1) || activeObj.equals(true) || "1".equals(activeObj.toString()) || "true".equalsIgnoreCase(activeObj.toString()));
 
             if (status == 1) {
                 Service.getInstance().sendThongBaoOK(player, "Mã quà tặng đã được sử dụng");

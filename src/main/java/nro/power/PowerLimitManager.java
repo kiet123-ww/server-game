@@ -32,8 +32,9 @@ public class PowerLimitManager {
 
     public void load() {
         try {
+            powers.clear();
             com.mongodb.client.MongoCollection<org.bson.Document> collection = nro.jdbc.MongoDBConnection.getDatabase().getCollection("power_limit");
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = collection.find().iterator();
+            com.mongodb.client.MongoCursor<org.bson.Document> rs = collection.find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator();
             while (rs.hasNext()) {
                 org.bson.Document doc = rs.next();
                 int id = (doc.getInteger("id") != null ? (short) (int) doc.getInteger("id") : 0);

@@ -27,7 +27,7 @@ public class MiniPetManager implements IManager<MinipetTemplate> {
         try {
             list.clear();
             MongoCollection<Document> collection = MongoDBConnection.getDatabase().getCollection("mini_pet");
-            try (MongoCursor<Document> cursor = collection.find().iterator()) {
+            try (MongoCursor<Document> cursor = collection.find().sort(com.mongodb.client.model.Sorts.ascending("id_temp")).iterator()) {
                 while (cursor.hasNext()) {
                     Document rs = cursor.next();
                     Object idObj = rs.get("id_temp");

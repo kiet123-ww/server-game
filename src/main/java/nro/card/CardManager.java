@@ -35,7 +35,7 @@ public class CardManager {
         try {
             cardTemplates.clear();
             MongoCollection<Document> collection = MongoDBConnection.getDatabase().getCollection("collection_book");
-            try (MongoCursor<Document> cursor = collection.find().iterator()) {
+            try (MongoCursor<Document> cursor = collection.find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator()) {
                 while (cursor.hasNext()) {
                     Document rs = cursor.next();
                     int id = (short) (int) rs.getInteger("id", 0);

@@ -38,14 +38,18 @@ public class PartManager {
 
     public void load() {
         try {
+            parts.clear();
             Gson gson = new Gson();
             com.mongodb.client.MongoCollection<org.bson.Document> collection = nro.jdbc.MongoDBConnection.getDatabase().getCollection("part");
-            try (com.mongodb.client.MongoCursor<org.bson.Document> cursor = collection.find().iterator()) {
+            try (com.mongodb.client.MongoCursor<org.bson.Document> cursor = collection.find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator()) {
                 while (cursor.hasNext()) {
                     org.bson.Document doc = cursor.next();
-                    short id = (short) (int) doc.getInteger("id");
-                    byte type = (byte) (int) doc.getInteger("TYPE");
-                    String partJson = doc.getString("DATA");
+                    Object idObj = doc.get("id");
+                    short id = idObj != null ? Short.parseShort(idObj.toString()) : 0;
+                    Object typeObj = doc.get("TYPE") != null ? doc.get("TYPE") : doc.get("type");
+                    byte type = typeObj != null ? Byte.parseByte(typeObj.toString()) : 0;
+                    Object dataObj = doc.get("DATA") != null ? doc.get("DATA") : doc.get("data");
+                    String partJson = dataObj != null ? dataObj.toString() : "[]";
                     int[][] partData = gson.fromJson(partJson, int[][].class);
                     Part part = new Part();
                     part.setId(id);

@@ -31,7 +31,7 @@ public class AttributeTemplateManager {
         try {
             list.clear();
             MongoCollection<Document> collection = MongoDBConnection.getDatabase().getCollection("attribute_template");
-            MongoCursor<Document> cursor = collection.find().iterator();
+            MongoCursor<Document> cursor = collection.find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator();
             while (cursor.hasNext()) {
                 Document doc = cursor.next();
                 Object idObj = doc.get("id");

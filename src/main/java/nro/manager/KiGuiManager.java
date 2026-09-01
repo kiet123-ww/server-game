@@ -42,12 +42,14 @@ public class KiGuiManager {
                     item.setTab((byte) (int) rs.getInteger("tab", 0));
                     item.setPriceGold(rs.getInteger("gold", 0));
                     item.setPriceGem(rs.getInteger("gem", 0));
-                    item.setUpTop(rs.getBoolean("up_top", false));
+                    Object ut = rs.get("up_top");
+                    item.setUpTop(ut != null && (ut.equals(1) || ut.equals(true) || "1".equals(ut.toString()) || "true".equalsIgnoreCase(ut.toString())));
                     item.setSold(rs.getInteger("sold", 0));
                     Object tc = rs.get("time_consign");
                     item.createTime = tc != null ? Long.parseLong(tc.toString()) : 0L;
                     item.setConsignName(rs.getString("consignor_name"));
-                    item.setSuKien(rs.getBoolean("su_kien", false));
+                    Object sk = rs.get("su_kien");
+                    item.setSuKien(sk != null && (sk.equals(1) || sk.equals(true) || "1".equals(sk.toString()) || "true".equalsIgnoreCase(sk.toString())));
                     jsonArray = (JSONArray) JSONValue.parse(rs.getString("item_options") == null ? "[]" : rs.getString("item_options"));
 
                     for (int j = 0; j < jsonArray.size(); j++) {

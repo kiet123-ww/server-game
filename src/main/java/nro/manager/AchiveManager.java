@@ -28,7 +28,7 @@ public class AchiveManager implements IManager<AchivementTemplate> {
         try {
             list.clear();
             com.mongodb.client.MongoCollection<org.bson.Document> collection = nro.jdbc.MongoDBConnection.getDatabase().getCollection("achivements");
-            com.mongodb.client.MongoCursor<org.bson.Document> rs = collection.find().iterator();
+            com.mongodb.client.MongoCursor<org.bson.Document> rs = collection.find().sort(com.mongodb.client.model.Sorts.ascending("id")).iterator();
             while (rs.hasNext()) {
                 org.bson.Document doc = rs.next();
                 Object idObj = doc.get("id");
