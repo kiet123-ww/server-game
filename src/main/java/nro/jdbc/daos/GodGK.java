@@ -692,7 +692,23 @@ public class GodGK {
                         PlayerService.gI().sendPetFollow(player);
                     }
 
-                    player.firstTimeLogin = (rs.get("firstTimeLogin") instanceof java.util.Date ? (java.util.Date) rs.get("firstTimeLogin") : null);
+                    Object ftlObj = rs.get("firstTimeLogin");
+                    if (ftlObj instanceof java.util.Date) {
+                        player.firstTimeLogin = (java.util.Date) ftlObj;
+                    } else if (ftlObj != null) {
+                        Date d = Util.getDate(ftlObj.toString());
+                        if (d != null) {
+                            player.firstTimeLogin = d;
+                        } else {
+                            try {
+                                player.firstTimeLogin = java.sql.Timestamp.valueOf(ftlObj.toString());
+                            } catch (Exception e) {
+                                player.firstTimeLogin = new java.util.Date();
+                            }
+                        }
+                    } else {
+                        player.firstTimeLogin = new java.util.Date();
+                    }
 
                     dataArray = (JSONArray) JSONValue.parse(rs.getString("buy_limit") == null ? "[]" : rs.getString("buy_limit"));
                     for (int i = 0; i < dataArray.size(); i++) {
@@ -803,7 +819,9 @@ public class GodGK {
                     }
                     if (session.ruby > 0) {
                         player.inventory.ruby += session.ruby;
-                        player.playerTask.achivements.get(ConstAchive.LAN_DAU_NAP_NGOC).count += session.ruby;
+                        if (player.playerTask.achivements.size() > ConstAchive.LAN_DAU_NAP_NGOC) {
+                            player.playerTask.achivements.get(ConstAchive.LAN_DAU_NAP_NGOC).count += session.ruby;
+                        }
                         PlayerDAO.subRuby(player, session.userId, session.ruby);
                     }
                     player.nPoint.hp = plHp;

@@ -38,7 +38,7 @@ public class PlayerService {
     }
 
     public void dailyLogin(Player player) { // Reset nhân vật hằng ngày khi qua 12h đêm
-        if (Util.compareDay(Date.from(Instant.now()), player.firstTimeLogin)) {
+        if (player.firstTimeLogin == null || Util.compareDay(Date.from(Instant.now()), player.firstTimeLogin)) {
             player.goldChallenge = 50000;
 
             player.gemChallenge = 1;
@@ -53,9 +53,13 @@ public class PlayerService {
 
             player.event.setReceivedLuckyMoney(false);
 
-            player.setRewardLimit(new byte[player.getRewardLimit().length]);
+            if (player.getRewardLimit() != null) {
+                player.setRewardLimit(new byte[player.getRewardLimit().length]);
+            }
 
-            player.buyLimit = new byte[player.buyLimit.length];
+            if (player.buyLimit != null) {
+                player.buyLimit = new byte[player.buyLimit.length];
+            }
 
             player.firstTimeLogin = Date.from(Instant.now());
         }

@@ -408,6 +408,9 @@ public class Util {
     }
 
     public static synchronized boolean compareDay(Date now, Date when) {
+        if (now == null || when == null) {
+            return true;
+        }
         try {
             Date date1 = Util.dateFormatDay.parse(Util.dateFormatDay.format(now));
             Date date2 = Util.dateFormatDay.parse(Util.dateFormatDay.format(when));
