@@ -895,7 +895,13 @@ public class InventoryService {
         try {
             msg = new Message(-36);
             msg.writer().writeByte(0);
-            msg.writer().writeByte(player.inventory.itemsBag.size());
+            int count = 0;
+            for (Item item : player.inventory.itemsBag) {
+                if (item.isNotNullItem()) {
+                    count++;
+                }
+            }
+            msg.writer().writeByte(count);
             for (int i = 0; i < player.inventory.itemsBag.size(); i++) {
                 Item item = player.inventory.itemsBag.get(i);
                 if (!item.isNotNullItem()) {
@@ -916,6 +922,7 @@ public class InventoryService {
             player.sendMessage(msg);
             msg.cleanup();
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

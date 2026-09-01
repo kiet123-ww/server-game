@@ -136,16 +136,20 @@ public class DataGame {
     }
 
     public static void requestMobTemplate(Session session, int id) {
-
         Message msg;
         try {
             byte[] mob = FileIO.readFile("mob/x" + session.zoomLevel + "/" + id);
-            msg = new Message(11);
-            msg.writer().writeByte(id);
-            msg.writer().write(mob);
-            session.sendMessage(msg);
-            msg.cleanup();
+            if (mob != null) {
+                msg = new Message(11);
+                msg.writer().writeByte(id);
+                msg.writer().write(mob);
+                session.sendMessage(msg);
+                msg.cleanup();
+            } else {
+                System.err.println("[WARN] Mob template file not found: mob/x" + session.zoomLevel + "/" + id);
+            }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

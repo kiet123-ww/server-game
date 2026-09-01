@@ -34,7 +34,7 @@ public class DBService {
     }
 
     private DBService() {
-        this.connPool = ConnPool.gI();
+        // Disabled MySQL pool - migrated to MongoDB
     }
 
     public synchronized Connection getConnectionForLogin() throws SQLException {
@@ -191,8 +191,7 @@ public class DBService {
     }
 
     public Connection getConnection() throws Exception {
-        // return this.connPool.getConnection();
-        return DBHika.getConnection();
+        return null;
     }
 
     public void release(Connection con) {

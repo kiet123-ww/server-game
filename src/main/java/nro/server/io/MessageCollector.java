@@ -38,12 +38,17 @@ public class MessageCollector implements Runnable {
                 try {
                     session.controller.onMessage(session, msg);
                 } catch (Exception e) {
-                    /// VMN
+                    System.err.println("[ERROR] Error processing CMD " + msg.command + " for player: " + (session.player != null ? session.player.name : "null"));
+                    e.printStackTrace();
                 }
 
                 msg.cleanup();
             }
         } catch (Exception ex) {
+            if (!(ex instanceof java.io.EOFException) && !(ex instanceof java.net.SocketException)) {
+                System.err.println("[ERROR] MessageCollector exception for session ID: " + (session != null ? session.id : "null"));
+                ex.printStackTrace();
+            }
         }
         Client.gI().kickSession(session);
     }

@@ -307,6 +307,10 @@ public class PlayerDAO {
 
     }
 
+    public static void updatePlayer(Player player) {
+        updatePlayer(player, null);
+    }
+
     public static void updatePlayer(Player player, Connection connection) {
         if (player.isDisposed() || player.isSaving()) {
             return;

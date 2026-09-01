@@ -313,16 +313,15 @@ public class ServerManager {
     public void saveAll(boolean updateTimeLogout) {
         try {
             List<Player> list = Client.gI().getPlayers();
-            Connection conn = DBService.gI().getConnectionForAutoSave();
             for (Player player : list) {
                 try {
                     PlayerDAO.updateTimeLogout = updateTimeLogout;
-                    PlayerDAO.updatePlayer(player, conn);
+                    PlayerDAO.updatePlayer(player);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
