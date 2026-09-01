@@ -597,9 +597,11 @@ public class Manager {
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 ItemTemplate itemTemp = new ItemTemplate();
                 itemTemp.id = (doc.getInteger("id") != null ? (short) (int) doc.getInteger("id") : 0);
-                itemTemp.type = (doc.getInteger("type") != null ? (byte) (int) doc.getInteger("type") : 0);
+                Integer typeVal = doc.getInteger("type") != null ? doc.getInteger("type") : doc.getInteger("TYPE");
+                itemTemp.type = typeVal != null ? (byte) (int) typeVal : 0;
                 itemTemp.gender = (doc.getInteger("gender") != null ? (byte) (int) doc.getInteger("gender") : 0);
-                itemTemp.name = doc.get("name") != null ? doc.get("name").toString() : "";
+                Object nameObj = doc.get("name") != null ? doc.get("name") : doc.get("NAME");
+                itemTemp.name = nameObj != null ? nameObj.toString() : "";
                 itemTemp.description = doc.get("description") != null ? doc.get("description").toString() : "";
                 itemTemp.iconID = (doc.getInteger("icon_id") != null ? (short) (int) doc.getInteger("icon_id") : 0);
                 itemTemp.part = (doc.getInteger("part") != null ? (short) (int) doc.getInteger("part") : 0);
@@ -608,7 +610,6 @@ public class Manager {
                 ITEM_TEMPLATES.add(itemTemp);
             }
             
-            
             Log.success("Load map item template thành công (" + ITEM_TEMPLATES.size() + ")");
 
             // load item option template
@@ -616,11 +617,12 @@ public class Manager {
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 ItemOptionTemplate optionTemp = new ItemOptionTemplate();
                 optionTemp.id = (doc.getInteger("id") != null ? doc.getInteger("id") : 0);
-                optionTemp.name = doc.getString("name");
-                optionTemp.type = (doc.getInteger("type") != null ? (byte) (int) doc.getInteger("type") : 0);
+                Object nameObj = doc.get("name") != null ? doc.get("name") : doc.get("NAME");
+                optionTemp.name = nameObj != null ? nameObj.toString() : "";
+                Integer typeVal = doc.getInteger("type") != null ? doc.getInteger("type") : doc.getInteger("TYPE");
+                optionTemp.type = typeVal != null ? (byte) (int) typeVal : 0;
                 ITEM_OPTION_TEMPLATES.add(optionTemp);
             }
-            
             
             Log.success("Load map item option template thành công (" + ITEM_OPTION_TEMPLATES.size() + ")");
 
@@ -733,8 +735,10 @@ public class Manager {
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 MobTemplate mobTemp = new MobTemplate();
                 mobTemp.id = (doc.getInteger("id") != null ? (byte) (int) doc.getInteger("id") : 0);
-                mobTemp.type = (doc.getInteger("type") != null ? (byte) (int) doc.getInteger("type") : 0);
-                mobTemp.name = doc.getString("name");
+                Integer typeVal = doc.getInteger("type") != null ? doc.getInteger("type") : doc.getInteger("TYPE");
+                mobTemp.type = typeVal != null ? (byte) (int) typeVal : 0;
+                Object nameObj = doc.get("name") != null ? doc.get("name") : doc.get("NAME");
+                mobTemp.name = nameObj != null ? nameObj.toString() : "";
                 mobTemp.hp = (doc.getInteger("hp") != null ? doc.getInteger("hp") : 0);
                 mobTemp.rangeMove = (doc.getInteger("range_move") != null ? (byte) (int) doc.getInteger("range_move") : 0);
                 mobTemp.speed = (doc.getInteger("speed") != null ? (byte) (int) doc.getInteger("speed") : 0);
@@ -744,7 +748,6 @@ public class Manager {
                 MOB_TEMPLATES.add(mobTemp);
             }
             
-            
             Log.success("Load mob template thành công (" + MOB_TEMPLATES.size() + ")");
 
             // load npc template
@@ -752,7 +755,8 @@ public class Manager {
             while (rs.hasNext()) { org.bson.Document doc = rs.next();
                 NpcTemplate npcTemp = new NpcTemplate();
                 npcTemp.id = (doc.getInteger("id") != null ? (byte) (int) doc.getInteger("id") : 0);
-                npcTemp.name = doc.getString("name");
+                Object nameObj = doc.get("name") != null ? doc.get("name") : doc.get("NAME");
+                npcTemp.name = nameObj != null ? nameObj.toString() : "";
                 npcTemp.head = (doc.getInteger("head") != null ? (short) (int) doc.getInteger("head") : 0);
                 npcTemp.body = (doc.getInteger("body") != null ? (short) (int) doc.getInteger("body") : 0);
                 npcTemp.leg = (doc.getInteger("leg") != null ? (short) (int) doc.getInteger("leg") : 0);
