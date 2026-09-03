@@ -56,8 +56,10 @@ public class TopManager {
                     player.gender = (byte) (int) rs.getInteger("gender", 0);
 
                     dataArray = (JSONArray) JSONValue.parse(rs.getString("data_point") == null ? "[]" : rs.getString("data_point"));
-                    player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
-                    dataArray.clear();
+                    if (dataArray != null && dataArray.size() >= 12) {
+                        player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
+                    }
+                    if (dataArray != null) dataArray.clear();
 
                     dataArray = (JSONArray) JSONValue.parse(rs.getString("items_body") == null ? "[]" : rs.getString("items_body"));
                     for (int i = 0; i < dataArray.size(); i++) {
@@ -158,8 +160,10 @@ public class TopManager {
                 player.topTask = (byte) nv;
 
                 dataArray = (JSONArray) JSONValue.parse(rs.getString("data_point") == null ? "[]" : rs.getString("data_point"));
-                player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
-                dataArray.clear();
+                if (dataArray != null && dataArray.size() >= 12) {
+                    player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
+                }
+                if (dataArray != null) dataArray.clear();
 
                 dataArray = (JSONArray) JSONValue.parse(rs.getString("items_body") == null ? "[]" : rs.getString("items_body"));
                 for (int i = 0; i < dataArray.size(); i++) {

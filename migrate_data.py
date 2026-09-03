@@ -428,8 +428,8 @@ def migrate_other_tables(sql, db):
     if docs: db['event'].insert_many(docs)
     print(f"[OK] Migrated {len(docs)} rows into 'event'")
 
-    # notifications & alert & global_data & type_map & category & post
-    for tbl in ['notifications', 'alert', 'global_data', 'type_map', 'category', 'post']:
+    # notifications & alert & global_data & type_map & category & post & clan_sv1 & clan_sv2
+    for tbl in ['notifications', 'alert', 'global_data', 'type_map', 'category', 'post', 'clan_sv1', 'clan_sv2']:
         db[tbl].delete_many({})
         rows = extract_table_rows(sql, tbl)
         docs = []

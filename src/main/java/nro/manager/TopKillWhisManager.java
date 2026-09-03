@@ -44,9 +44,14 @@ public class TopKillWhisManager {
                 .sort(Sorts.orderBy(Sorts.descending("levelKillWhis"), Sorts.ascending("timeKillWhis")))
                 .limit(100).iterator()) {
             while (cursor.hasNext()) {
-                Document rs = cursor.next();
-                Player player = extractPlayerFromDocument(rs);
-                list.add(player);
+                try {
+                    Document rs = cursor.next();
+                    Player player = extractPlayerFromDocument(rs);
+                    if (player != null) {
+                        list.add(player);
+                    }
+                } catch (Exception ex) {
+                }
             }
         }
     } catch (Exception e) {
@@ -83,18 +88,31 @@ public class TopKillWhisManager {
     }
 
     private void extractDataPoint(String dataPoint, Player player) {
-        JSONValue jv = new JSONValue();
-        JSONArray dataArray = (JSONArray) jv.parse(dataPoint);
-        player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
+        if (dataPoint == null) return;
+        try {
+            JSONValue jv = new JSONValue();
+            JSONArray dataArray = (JSONArray) jv.parse(dataPoint);
+            if (dataArray != null && dataArray.size() >= 12) {
+                player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
+            }
+            if (dataArray != null) dataArray.clear();
+        } catch (Exception e) {
+        }
     }
 
     private void extractItemsBody(String itemsBody, Player player) {
-        JSONValue jv = new JSONValue();
-        JSONArray dataArray = (JSONArray) jv.parse(itemsBody);
-
-        for (Object itemDataObject : dataArray) {
-            Item item = createItemFromDataObject(itemDataObject.toString());
-            player.inventory.itemsBody.add(item);
+        if (itemsBody == null) return;
+        try {
+            JSONValue jv = new JSONValue();
+            JSONArray dataArray = (JSONArray) jv.parse(itemsBody);
+            if (dataArray != null) {
+                for (Object itemDataObject : dataArray) {
+                    Item item = createItemFromDataObject(itemDataObject.toString());
+                    player.inventory.itemsBody.add(item);
+                }
+                dataArray.clear();
+            }
+        } catch (Exception e) {
         }
     }
 

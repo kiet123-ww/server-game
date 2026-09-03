@@ -298,7 +298,23 @@ public class PlayerDAO {
                     .append("thoi_vang", 10)
                     .append("data_side_task", "{}")
                     .append("achivements", achive)
-                    .append("lastimelogin", new java.util.Date());
+                    .append("lastimelogin", new java.util.Date())
+                    .append("sk_tet", "[0,0,0,0,0]")
+                    .append("dhtime", "[0,0,0,0,0,0]")
+                    .append("dhtime2", "[0,0,0,0,0,0]")
+                    .append("dhtime3", "[0,0,0,0,0,0]")
+                    .append("dhtime4", "[0,0,0,0,0,0]")
+                    .append("dhtime5", "[0,0,0,0,0,0]")
+                    .append("killWhis", "[0,0,0]")
+                    .append("MaBaoVe", "[0,0]")
+                    .append("checkNhanQua", "[0,0]")
+                    .append("data_card", "[]")
+                    .append("challenge", "[0,0,0,0]")
+                    .append("buy_limit", "[]")
+                    .append("reward_limit", "[]")
+                    .append("event_point", 0)
+                    .append("moc_nap", 0)
+                    .append("firstTimeLogin", new java.util.Date());
             
             collection.insertOne(doc);
         } catch (Exception e) {

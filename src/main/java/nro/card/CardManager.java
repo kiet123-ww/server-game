@@ -53,15 +53,21 @@ public class CardManager {
                     short bag = (short) (int) rs.getInteger("bag", 0);
                     short aura = (short) (int) rs.getInteger("aura", 0);
                     ArrayList<ItemOption> options = new ArrayList<>();
-                    JSONArray jArr = new JSONArray(rs.getString("options"));
-                    for (int i = 0; i < jArr.length(); i++) {
-                        JSONObject obj = jArr.getJSONObject(i);
-                        int oID = obj.getInt("id");
-                        int oParam = obj.getInt("param");
-                        int active_card = obj.getInt("active_card");
-                        ItemOption itemOption = new ItemOption(oID, oParam);
-                        itemOption.activeCard = (byte) active_card;
-                        options.add(itemOption);
+                    String optStr = rs.getString("options");
+                    if (optStr != null && !optStr.isEmpty()) {
+                        try {
+                            JSONArray jArr = new JSONArray(optStr);
+                            for (int i = 0; i < jArr.length(); i++) {
+                                JSONObject obj = jArr.getJSONObject(i);
+                                int oID = obj.optInt("id", 0);
+                                int oParam = obj.optInt("param", 0);
+                                int active_card = obj.optInt("active_card", 0);
+                                ItemOption itemOption = new ItemOption(oID, oParam);
+                                itemOption.activeCard = (byte) active_card;
+                                options.add(itemOption);
+                            }
+                        } catch (Exception e) {
+                        }
                     }
                     CardTemplate card = CardTemplate.builder()
                             .id(id)

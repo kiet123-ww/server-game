@@ -917,18 +917,17 @@ public class InventoryService {
             for (int i = 0; i < player.inventory.itemsBag.size(); i++) {
                 Item item = player.inventory.itemsBag.get(i);
                 if (!item.isNotNullItem()) {
-                    msg.writer().writeShort(-1);
-                } else {
-                    msg.writer().writeShort(item.template.id);
-                    msg.writer().writeInt(item.quantity);
-                    msg.writer().writeUTF(item.getInfo());
-                    msg.writer().writeUTF(item.getContent());
-                    List<ItemOption> itemOptions = item.getDisplayOptions();
-                    msg.writer().writeByte(itemOptions.size()); // options
-                    for (ItemOption o : itemOptions) {
-                        msg.writer().writeByte(o.optionTemplate.id);
-                        msg.writer().writeShort(o.param);
-                    }
+                    continue;
+                }
+                msg.writer().writeShort(item.template.id);
+                msg.writer().writeInt(item.quantity);
+                msg.writer().writeUTF(item.getInfo());
+                msg.writer().writeUTF(item.getContent());
+                List<ItemOption> itemOptions = item.getDisplayOptions();
+                msg.writer().writeByte(itemOptions.size()); // options
+                for (ItemOption o : itemOptions) {
+                    msg.writer().writeByte(o.optionTemplate.id);
+                    msg.writer().writeShort(o.param);
                 }
             }
 

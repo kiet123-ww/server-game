@@ -42,9 +42,14 @@ public class TopPowerManager {
             MongoCollection<Document> collection = MongoDBConnection.getDatabase().getCollection("player");
             try (MongoCursor<Document> cursor = collection.find().sort(Sorts.descending("power")).limit(100).iterator()) {
                 while (cursor.hasNext()) {
-                    Document rs = cursor.next();
-                    Player player = processPlayerDocument(rs);
-                    list.add(player);
+                    try {
+                        Document rs = cursor.next();
+                        Player player = processPlayerDocument(rs);
+                        if (player != null) {
+                            list.add(player);
+                        }
+                    } catch (Exception ex) {
+                    }
                 }
             }
         } catch (Exception e) {
@@ -76,22 +81,32 @@ public class TopPowerManager {
     }
 
     private void processPlayerDataPoint(String dataPoint, Player player) {
-        JSONValue jv = new JSONValue();
-        JSONArray dataArray = (JSONArray) jv.parse(dataPoint);
-        player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
-        dataArray.clear();
+        if (dataPoint == null) return;
+        try {
+            JSONValue jv = new JSONValue();
+            JSONArray dataArray = (JSONArray) jv.parse(dataPoint);
+            if (dataArray != null && dataArray.size() >= 12) {
+                player.nPoint.power = Long.parseLong(dataArray.get(11).toString());
+            }
+            if (dataArray != null) dataArray.clear();
+        } catch (Exception e) {
+        }
     }
 
     private void processPlayerItemsBody(String itemsBody, Player player) {
-        JSONValue jv = new JSONValue();
-        JSONArray dataArray = (JSONArray) jv.parse(itemsBody);
-
-        for (int i = 0; i < dataArray.size(); i++) {
-            Item item = processItem(dataArray.get(i).toString());
-            player.inventory.itemsBody.add(item);
+        if (itemsBody == null) return;
+        try {
+            JSONValue jv = new JSONValue();
+            JSONArray dataArray = (JSONArray) jv.parse(itemsBody);
+            if (dataArray != null) {
+                for (int i = 0; i < dataArray.size(); i++) {
+                    Item item = processItem(dataArray.get(i).toString());
+                    player.inventory.itemsBody.add(item);
+                }
+                dataArray.clear();
+            }
+        } catch (Exception e) {
         }
-
-        dataArray.clear();
     }
 
     private Item processItem(String itemData) {
