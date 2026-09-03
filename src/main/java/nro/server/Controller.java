@@ -902,7 +902,7 @@ public class Controller {
 //                InventoryService.gI().removeItemBox(player, i);
 //            }
 //        }
-        if (player.inventory.itemsBody.get(12).isNotNullItem()) {
+        if (player.inventory != null && player.inventory.itemsBody != null && player.inventory.itemsBody.size() > 12 && player.inventory.itemsBody.get(12).isNotNullItem()) {
             new Thread(() -> {
                 try {
                     Thread.sleep(1000);

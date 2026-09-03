@@ -219,9 +219,9 @@ public abstract class Npc implements IAtionNpc {
 
     public boolean canOpenNpc(Player player) {
         if (this.tempId == ConstNpc.DAU_THAN) {
-            if (player.zone.map.mapId == 21
+            if (player.zone != null && player.zone.map != null && (player.zone.map.mapId == 21
                     || player.zone.map.mapId == 22
-                    || player.zone.map.mapId == 23) {
+                    || player.zone.map.mapId == 23)) {
                 return true;
             } else {
                 Service.getInstance().hideWaitDialog(player);
@@ -229,8 +229,10 @@ public abstract class Npc implements IAtionNpc {
                 return false;
             }
         }
-        if (player.zone.map.mapId == this.mapId
-                && Util.getDistance(this.cx, this.cy, player.location.x, player.location.y) <= 60) {
+        if (this.tempId == ConstNpc.CALICK || this.tempId == ConstNpc.LY_TIEU_NUONG
+                || this.tempId == ConstNpc.CON_MEO || this.tempId == ConstNpc.RONG_THIENG
+                || (player.zone != null && player.zone.map != null && player.zone.map.mapId == this.mapId
+                    && Util.getDistance(this.cx, this.cy, player.location.x, player.location.y) <= 500)) {
             player.iDMark.setNpcChose(this);
             return true;
         } else {

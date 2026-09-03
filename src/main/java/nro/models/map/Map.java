@@ -254,12 +254,18 @@ public class Map implements Runnable {
     }
 
     public Npc getNpc(Player player, int tempId) {
+        Npc nearestNpc = null;
+        int minDis = Integer.MAX_VALUE;
         for (Npc npc : npcs) {
-            if (npc.tempId == tempId && Util.getDistance(player, npc) <= 60) {
-                return npc;
+            if (npc.tempId == tempId) {
+                int dis = Util.getDistance(player, npc);
+                if (dis < minDis) {
+                    minDis = dis;
+                    nearestNpc = npc;
+                }
             }
         }
-        return null;
+        return nearestNpc;
     }
 
     // --------------------------------------------------------------------------

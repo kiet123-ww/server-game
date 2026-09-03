@@ -82,7 +82,7 @@ public class PlayerDAO {
             int hp = gender == 0 ? 30 : 20;
 
             JSONArray dataBody = new JSONArray();
-            for (int i = 0; i < 12; i++) {
+            for (int i = 0; i < 13; i++) {
                 JSONObject item = new JSONObject();
                 JSONArray options = new JSONArray();
                 JSONArray option = new JSONArray();

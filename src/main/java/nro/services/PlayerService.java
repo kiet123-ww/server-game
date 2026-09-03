@@ -299,7 +299,7 @@ public class PlayerService {
             ds.writeInt((int) player.id);
             ds.writeByte(type);
             if (type == 1) {
-                if (player.inventory.itemsBody.get(10).isNotNullItem()) {
+                if (player.inventory != null && player.inventory.itemsBody != null && player.inventory.itemsBody.size() > 10 && player.inventory.itemsBody.get(10).isNotNullItem()) {
                     ds.writeShort(pet.getIconID());
                 } else {
                     ds.writeShort(0);
